@@ -1,0 +1,31 @@
+{
+  "name": "tarot-game-engine",
+  "version": "1.0.0",
+  "description": "A tarot card game Engine",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "/dist"
+  ],
+  "scripts": {
+    "test": "jest --config ./jest.config.json"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://gitlab.li212.fr/cards/tarot-game-engine.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "play-with-deck": "file:../play-with-deck",
+    "rxjs": "^7.5.2",
+    "tarot-card-deck": "file:../tarot-card-deck"
+  },
+  "devDependencies": {
+    "@babel/preset-env": "^7.16.8",
+    "@babel/preset-typescript": "^7.16.7",
+    "@types/jest": "^27.4.0",
+    "jest": "^27.4.7"
+  }
+}
