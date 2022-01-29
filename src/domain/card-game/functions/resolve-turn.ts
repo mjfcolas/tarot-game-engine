@@ -1,5 +1,13 @@
 import {PlayingCard} from "../../../../../tarot-card-deck";
 import {PlayerIdentifier} from "../player/card-game-player";
 
-export type PlayerWithCard = { playingCard: PlayingCard, playerIdentifier: PlayerIdentifier }
-export type resolveTurn = (playedCards: PlayerWithCard[]) => PlayerIdentifier
+export type PlayedCard = { playingCard: PlayingCard, playerIdentifier: PlayerIdentifier }
+export type WonCardsByPlayer = {
+    playerIdentifier: PlayerIdentifier;
+    wonCards: PlayingCard[]
+}
+export type TurnResult = {
+    winner: PlayerIdentifier;
+    wonCardsByPlayer: readonly WonCardsByPlayer[]
+}
+export type resolveTurn = (playedCards: PlayedCard[]) => TurnResult

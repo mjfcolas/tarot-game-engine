@@ -1,8 +1,10 @@
 import {DefaultCardGameManager} from "./default-card-game-manager";
-import {DummyTarotPlayer} from "../tarot-game/player/__dummy__/dummy-tarot-player";
 import {DECK_78} from "../../../../tarot-card-deck";
 import {CardGameManager} from "./card-game-manager";
 import {MockedPlayableTable} from "./ports/__mock__/mocked-playable-table";
+import {DummyCardGamePlayer} from "./player/__dummy__/dummy-card-game-player";
+import {MockedTarotTable} from "../tarot-game/table/ports/__mock__/mocked-tarot-table";
+
 
 describe(`Default card game manager`, () => {
 
@@ -21,17 +23,39 @@ describe(`Default card game manager`, () => {
     const mockedGetPlayableCards = jest.fn()
     mockedGetPlayableCards.mockReturnValue([aPlayingCard])
 
-
-    let players: DummyTarotPlayer[] =
+    let players: DummyCardGamePlayer[] =
         beforeEach(() => {
             players = [
-                new DummyTarotPlayer("1"),
-                new DummyTarotPlayer("2"),
-                new DummyTarotPlayer("3"),
-                new DummyTarotPlayer("4")
+                new DummyCardGamePlayer("1"),
+                new DummyCardGamePlayer("2"),
+                new DummyCardGamePlayer("3"),
+                new DummyCardGamePlayer("4")
             ]
 
         })
+
+    const getTurnResultForPlayer = (player: DummyCardGamePlayer) => ({
+        winner: player.id,
+        wonCardsByPlayer: [
+            {
+                playerIdentifier: players[0].id,
+                wonCards: []
+            },
+            {
+                playerIdentifier: players[1].id,
+                wonCards: []
+            },
+            {
+                playerIdentifier: players[2].id,
+                wonCards: []
+            },
+            {
+                playerIdentifier: players[3].id,
+                wonCards: []
+            },
+        ]
+    })
+
 
     test(`Given a card game manager, 
     when game begin, 
@@ -75,7 +99,7 @@ describe(`Default card game manager`, () => {
         when the last player plays its card,
         then result of turn is resolved and turn winner is emitted`, () => {
         const cardGameManager: DefaultCardGameManager = new DefaultCardGameManager(mockedResolveTurn, mockedGetPlayableCards, mockedTarotTable, players);
-        mockedResolveTurn.mockReturnValue(players[0].id)
+        mockedResolveTurn.mockReturnValue(getTurnResultForPlayer(players[0]))
 
         playCompleteTurn(cardGameManager)
 
@@ -89,7 +113,7 @@ describe(`Default card game manager`, () => {
         when the last player plays its card,
         then turn winner is asked to play`, () => {
         const cardGameManager: DefaultCardGameManager = new DefaultCardGameManager(mockedResolveTurn, mockedGetPlayableCards, mockedTarotTable, players);
-        mockedResolveTurn.mockReturnValue(players[2].id)
+        mockedResolveTurn.mockReturnValue(getTurnResultForPlayer(players[2]))
         playCompleteTurn(cardGameManager)
 
         expect(players[2].askedToPlay).toHaveBeenCalled()
@@ -100,7 +124,7 @@ describe(`Default card game manager`, () => {
         when second player plays again,
         then third player is asked to play`, () => {
         const cardGameManager: DefaultCardGameManager = new DefaultCardGameManager(mockedResolveTurn, mockedGetPlayableCards, mockedTarotTable, players);
-        mockedResolveTurn.mockReturnValue(players[2].id)
+        mockedResolveTurn.mockReturnValue(getTurnResultForPlayer(players[2]))
         playCompleteTurn(cardGameManager)
         cardGameManager.play(players[2], aPlayingCard)
         expect(players[3].askedToPlay).toHaveBeenCalled()
@@ -110,7 +134,7 @@ describe(`Default card game manager`, () => {
         when first player tries to play,
         then the player is notified that he cannot play`, () => {
         const cardGameManager: DefaultCardGameManager = new DefaultCardGameManager(mockedResolveTurn, mockedGetPlayableCards, mockedTarotTable, players);
-        mockedResolveTurn.mockReturnValue(players[2].id)
+        mockedResolveTurn.mockReturnValue(getTurnResultForPlayer(players[2]))
         playCompleteTurn(cardGameManager)
 
         cardGameManager.play(players[0], aPlayingCard)
@@ -123,7 +147,7 @@ describe(`Default card game manager`, () => {
         then first player is asked to play`, () => {
         const cardGameManager: DefaultCardGameManager = new DefaultCardGameManager(mockedResolveTurn, mockedGetPlayableCards, mockedTarotTable, players);
         playCompleteTurn(cardGameManager)
-        mockedResolveTurn.mockReturnValue(players[3].id)
+        mockedResolveTurn.mockReturnValue(getTurnResultForPlayer(players[3]))
         cardGameManager.play(players[3], aPlayingCard)
         expect(players[0].askedToPlay).toHaveBeenCalled()
     });
@@ -132,10 +156,10 @@ describe(`Default card game manager`, () => {
         when third, fourth, first and second player plays,
         then result of turn is resolved and turn winner is emitted`, () => {
         const cardGameManager: DefaultCardGameManager = new DefaultCardGameManager(mockedResolveTurn, mockedGetPlayableCards, mockedTarotTable, players);
-        mockedResolveTurn.mockReturnValue(players[2].id)
+        mockedResolveTurn.mockReturnValue(getTurnResultForPlayer(players[2]))
         playCompleteTurn(cardGameManager)
 
-        mockedResolveTurn.mockReturnValue(players[1].id)
+        mockedResolveTurn.mockReturnValue(getTurnResultForPlayer(players[1]))
         cardGameManager.play(players[2], aPlayingCard);
         cardGameManager.play(players[3], aPlayingCard);
         cardGameManager.play(players[0], aPlayingCard);
@@ -181,15 +205,39 @@ describe(`Default card game manager`, () => {
     });
 
     test(`Given a game that has begun,
-        when a turns end,
-        then each player receive updated available cards`, () => {
-        expect(true).toBeFalsy()
+        when a player plays,
+        then the player receives updated available cards`, () => {
+        const cardGameManager: DefaultCardGameManager = new DefaultCardGameManager(mockedResolveTurn, mockedGetPlayableCards, mockedTarotTable, players);
+        cardGameManager.begin();
+
+        const mockedAvailableCards = [
+            DECK_78[0],
+            DECK_78[1]
+        ];
+        mockedTarotTable.listCardsOf.mockReturnValue(mockedAvailableCards)
+        cardGameManager.play(players[0], aPlayingCard)
+        expect(players[0].availableCards).toEqual(mockedAvailableCards)
+    });
+
+    test(`Given a game that has begun,
+        when a player plays,
+        then its card is move to the table`, () => {
+        const cardGameManager: DefaultCardGameManager = new DefaultCardGameManager(mockedResolveTurn, mockedGetPlayableCards, mockedTarotTable, players);
+        cardGameManager.begin();
+        cardGameManager.play(players[0], aPlayingCard)
+        expect(mockedTarotTable.moveCardOfPlayerToTable).toHaveBeenCalledWith(aPlayingCard, players[0].id)
     });
 
     test(`Given a game that has begun,
         when a turns end,
         then the cards are distributed in won cards of each players`, () => {
-        expect(true).toBeFalsy()
+        const localMockedTarotTable = new MockedPlayableTable();
+        const cardGameManager: DefaultCardGameManager = new DefaultCardGameManager(mockedResolveTurn, mockedGetPlayableCards, localMockedTarotTable, players);
+        cardGameManager.begin();
+        mockedResolveTurn.mockReturnValue(getTurnResultForPlayer(players[1]))
+        playCompleteTurn(cardGameManager)
+
+        expect(localMockedTarotTable.moveToPointsOf).toHaveBeenCalledTimes(4)
     });
 });
 
