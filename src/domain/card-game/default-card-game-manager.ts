@@ -1,27 +1,29 @@
 import {CardGameManager} from "./card-game-manager";
 import {Observable} from "rxjs";
-import {TarotPlayer} from "../player/tarot-player";
+import {TarotPlayer} from "../tarot-game/player/tarot-player";
 import {PlayingCard} from "../../../../tarot-card-deck";
-import {PlayerIdentifier} from "./turn/turn-resolver";
-import {TarotTable} from "../table/tarot-table";
+import {resolveTurn} from "./functions/resolve-turn";
+import {getPlayableCards} from "./functions/playable-cards";
+import {PlayableTable} from "./ports/playable-table";
+import {CardGamePlayer} from "./player/card-game-player";
 
 export class DefaultCardGameManager implements CardGameManager {
 
     constructor(
-        private readonly resolveTurn: (playedCards: { playingCard: PlayingCard, playerIdentifier: PlayerIdentifier }[]) => PlayerIdentifier,
-        private readonly getPlayableCards: (playedCards: PlayingCard[], availableCards: PlayingCard[]) => PlayingCard[],
-        private readonly table: TarotTable
+        private readonly resolveTurn: resolveTurn,
+        private readonly getPlayableCards: getPlayableCards,
+        private readonly table: PlayableTable
     ) {
     }
 
     begin(): void {
     }
 
-    gameIsOver(): Observable<TarotTable> {
+    gameIsOver(): Observable<PlayableTable> {
         return undefined;
     }
 
-    play(player: TarotPlayer, card: PlayingCard) {
+    play(player: CardGamePlayer, card: PlayingCard) {
 
     }
 }

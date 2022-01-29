@@ -1,10 +1,9 @@
 import {DefaultCardGameManager} from "./default-card-game-manager";
-import {DummyTarotPlayer} from "../player/dummy/dummy-tarot-player";
+import {DummyTarotPlayer} from "../tarot-game/player/__dummy__/dummy-tarot-player";
 import {DECK_78} from "../../../../tarot-card-deck";
 import {CardGameManager} from "./card-game-manager";
-import {MockedTarotTable} from "../table/__mock__/mocked-tarot-table";
 import {lastValueFrom} from "rxjs";
-import {Announce} from "../announce/announce";
+import {MockedPlayableTable} from "./ports/__mock__/mocked-playable-table";
 
 describe(`Default card game manager`, () => {
 
@@ -18,7 +17,7 @@ describe(`Default card game manager`, () => {
     }
     const aPlayingCard = DECK_78[0]
 
-    const mockedTarotTable = new MockedTarotTable();
+    const mockedTarotTable = new MockedPlayableTable();
     const mockedResolveTurn = jest.fn();
     const mockedGetPlayableCards = jest.fn()
     mockedGetPlayableCards.mockReturnValue(aPlayingCard)
