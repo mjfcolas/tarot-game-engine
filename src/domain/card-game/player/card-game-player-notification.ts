@@ -1,6 +1,5 @@
 import {PlayingCard} from "../../../../../tarot-card-deck/src";
-import {Announce} from "../../tarot-game/announce/announce";
-import {TarotPlayer} from "../../tarot-game/player/tarot-player";
+import {CardGamePlayer} from "./card-game-player";
 
 export type CardGamePlayerNotification = {
     type: "GOT_AVAILABLE_CARDS"
@@ -11,8 +10,9 @@ export type CardGamePlayerNotification = {
     type: "ERROR_WHILE_PLAYING"
 } | {
     type: "PLAYER_HAS_PLAYED",
+    player: CardGamePlayer
     card: PlayingCard
 } | {
     type: "TURN_RESULT_IS_KNOWN",
-    turnWinner: TarotPlayer
+    turnWinner: CardGamePlayer
 }
