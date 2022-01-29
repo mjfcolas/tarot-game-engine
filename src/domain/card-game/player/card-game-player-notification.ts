@@ -1,5 +1,5 @@
-import {PlayingCard} from "../../../../../tarot-card-deck/src";
 import {CardGamePlayer} from "./card-game-player";
+import {PlayingCard} from "tarot-card-deck";
 
 export type CardGamePlayerNotification = {
     type: "GOT_AVAILABLE_CARDS"

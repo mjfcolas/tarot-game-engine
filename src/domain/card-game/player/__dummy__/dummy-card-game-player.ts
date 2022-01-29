@@ -1,6 +1,6 @@
-import {PlayingCard} from "../../../../../../tarot-card-deck/src";
 import {CardGamePlayer} from "../card-game-player";
 import {CardGamePlayerNotification} from "../card-game-player-notification";
+import {PlayingCard} from "tarot-card-deck";
 
 export class DummyCardGamePlayer implements CardGamePlayer {
     playError = jest.fn();

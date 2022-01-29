@@ -1,9 +1,9 @@
 import {DefaultTarotDealer} from "./default-tarot-dealer";
 import {DummyTarotPlayer} from "../player/__dummy__/dummy-tarot-player";
-import {DECK_78} from "../../../../../tarot-card-deck";
 import {dealTarotCards} from "../functions/tarot-card-dealer";
 import {TarotTable} from "../table/ports/tarot-table";
 import {PlayableTarotTable} from "../../../infrastructure/table/playable-tarot-table";
+import {DECK_78} from "tarot-card-deck";
 
 describe('Tarot dealer', function () {
     const table: TarotTable = new PlayableTarotTable(DECK_78)

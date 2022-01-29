@@ -1,10 +1,10 @@
 import {CardGameManager} from "./card-game-manager";
 import {Observable, ReplaySubject, Subject} from "rxjs";
-import {PlayingCard} from "../../../../tarot-card-deck";
 import {PlayedCard, resolveTurn, TurnResult} from "./functions/resolve-turn";
 import {getPlayableCards} from "./functions/playable-cards";
 import {PlayableTable} from "./ports/playable-table";
 import {CardGamePlayer} from "./player/card-game-player";
+import {PlayingCard} from "tarot-card-deck";
 
 export class DefaultCardGameManager implements CardGameManager {
     private readonly gameIsOverSubject: Subject<PlayableTable> = new ReplaySubject(1);
@@ -14,7 +14,7 @@ export class DefaultCardGameManager implements CardGameManager {
         private readonly resolveTurn: resolveTurn,
         private readonly getPlayableCards: getPlayableCards,
         private readonly table: PlayableTable,
-        private readonly players: CardGamePlayer[]
+        private readonly players: readonly CardGamePlayer[]
     ) {
     }
 
@@ -66,7 +66,7 @@ class OneTurnManager {
         private readonly resolveTurn: resolveTurn,
         private readonly getPlayableCards: getPlayableCards,
         private readonly table: PlayableTable,
-        private readonly players: CardGamePlayer[]
+        private readonly players: readonly CardGamePlayer[]
     ) {
     }
 
