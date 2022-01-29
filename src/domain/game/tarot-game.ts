@@ -3,9 +3,14 @@ import {TarotPlayer} from "../player/tarot-player";
 import {Announce} from "../announce/announce";
 import {PlayingCard} from "../../../../tarot-card-deck/src";
 import {AnnounceManager} from "../announce/announce-manager";
+import {CardGameManager} from "../card-game/card-game-manager";
 
 export type GameResult = {
     winner?: TarotPlayer,
+}
+
+export type GameResultWithDeck = {
+    gameResult: GameResult
     endOfGameDeck: readonly PlayingCard[]
 }
 
@@ -15,33 +20,34 @@ export class TarotGame {
         private readonly players: readonly TarotPlayer[],
         private readonly table: TarotTable,
         private readonly announceManager: AnnounceManager,
-        private readonly endOfGameCallback: (gameResult: GameResult) => void) {
+        private readonly cardGameManager: CardGameManager,
+        private readonly endOfGameCallback: (gameResult: GameResultWithDeck) => void) {
         this.table.shuffle();
         this.table.cut();
         this.table.deal();
         this.resolveTakerAndContinueOrEndGame();
-        this.announceManager.beginAnnounces();
     }
 
     public announce(playerThatAnnounce: TarotPlayer, announce?: Announce): void {
         this.announceManager.announce(playerThatAnnounce, announce)
     }
 
-
     private resolveTakerAndContinueOrEndGame() {
         this.announceManager.announcesAreComplete().subscribe((takerAnnounce) => {
             if (takerAnnounce) {
                 this.players.forEach((playerToNotify) => TarotGame.notifyTakerIsKnown(playerToNotify, takerAnnounce.taker, takerAnnounce.announce))
+                this.cardGameManager.begin();
             } else {
                 this.players.forEach((playerToNotify) => TarotGame.notifyGameIsOver(playerToNotify))
                 this.endOfGameCallback(this.noTakerGameResult())
             }
         })
+        this.announceManager.beginAnnounces();
     }
 
-    private noTakerGameResult(): GameResult {
+    private noTakerGameResult(): GameResultWithDeck {
         return {
-            winner: undefined,
+            gameResult: undefined,
             endOfGameDeck: this.table.gatherDeck()
         }
     }

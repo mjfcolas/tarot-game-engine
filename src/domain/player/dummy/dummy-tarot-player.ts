@@ -6,8 +6,12 @@ import {Announce} from "../../announce/announce";
 export class DummyTarotPlayer implements TarotPlayer {
     announceDone = jest.fn();
     announceError = jest.fn();
+    playError = jest.fn();
     takerIsKnown = jest.fn();
     gameOver = jest.fn();
+    askedToPlay = jest.fn();
+    playedCardIsKnown = jest.fn();
+    turnResultIsKnown = jest.fn()
     public availableCards: PlayingCard[] = []
     public availableAnnounces: Announce[] = []
 
@@ -32,6 +36,18 @@ export class DummyTarotPlayer implements TarotPlayer {
         }
         if(playerNotification.type === "GAME_IS_OVER"){
             this.gameOver()
+        }
+        if(playerNotification.type === "ASKED_TO_PLAY"){
+            this.askedToPlay();
+        }
+        if(playerNotification.type === "ERROR_WHILE_PLAYING"){
+            this.playError();
+        }
+        if(playerNotification.type === "PLAYER_HAS_PLAYED"){
+            this.playedCardIsKnown(playerNotification.card)
+        }
+        if(playerNotification.type === "TURN_RESULT_IS_KNOWN"){
+            this.turnResultIsKnown(playerNotification.turnWinner)
         }
     }
 }

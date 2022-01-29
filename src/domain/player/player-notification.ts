@@ -20,4 +20,14 @@ export type PlayerNotification = {
     announce?: Announce
 } | {
     type: "GAME_IS_OVER"
+} | {
+    type: "ASKED_TO_PLAY"
+} | {
+    type: "ERROR_WHILE_PLAYING"
+} | {
+    type: "PLAYER_HAS_PLAYED",
+    card: PlayingCard
+} | {
+    type: "TURN_RESULT_IS_KNOWN",
+    turnWinner: TarotPlayer
 }

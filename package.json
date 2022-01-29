@@ -18,9 +18,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "play-with-deck": "^1.0.0",
-    "rxjs": "^7.5.2",
-    "tarot-card-deck": "^1.0.0"
+    "tarot-card-deck": "file:../tarot-card-deck",
+    "play-with-deck": "file:../play-with-deck",
+    "rxjs": "^7.5.2"
   },
   "devDependencies": {
     "@babel/preset-env": "^7.16.8",

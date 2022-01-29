@@ -8,4 +8,6 @@ export interface TarotTable {
     deal(): void
 
     gatherDeck(): readonly PlayingCard[]
+
+    getNumberOfRemainingCardsToPlay(): number
 }
