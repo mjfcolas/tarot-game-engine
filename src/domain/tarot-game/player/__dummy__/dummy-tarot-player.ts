@@ -1,9 +1,9 @@
 import {TarotPlayer} from "../tarot-player";
-import {PlayingCard} from "../../../../../../tarot-card-deck/src";
 import {TarotPlayerNotification} from "../tarot-player-notification";
 import {Announce} from "../../announce/announce";
 import {DummyCardGamePlayer} from "../../../card-game/player/__dummy__/dummy-card-game-player";
 import {CardGamePlayerNotification} from "../../../card-game/player/card-game-player-notification";
+import {PlayingCard} from "tarot-card-deck";
 
 export class DummyTarotPlayer extends DummyCardGamePlayer implements TarotPlayer {
     announceDone = jest.fn();

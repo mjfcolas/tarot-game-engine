@@ -1,8 +1,8 @@
 import {PlayableTable} from "../../domain/card-game/ports/playable-table";
-import {PlayingCard} from "../../../../tarot-card-deck";
 import {TarotTable} from "../../domain/tarot-game/table/ports/tarot-table";
-import {PlayerIdentifier} from "../../domain/tarot-game/player/tarot-player";
-import {Table} from "../../../../play-with-deck/dist/table/table";
+import {PlayingCard} from "tarot-card-deck";
+import {Table} from "play-with-deck/dist/table/table";
+import {PlayerIdentifier} from "../../domain/card-game/player/card-game-player";
 
 const MAIN_DECK_IDENTIFIER = "MAIN";
 const DOG_DECK_IDENTIFIER = "DOG"
@@ -42,6 +42,20 @@ export class PlayableTarotTable implements PlayableTable, TarotTable {
 
     putCardInDog(cardIdentifier: string): void {
         this.table.pick(cardIdentifier, MAIN_DECK_IDENTIFIER, DOG_DECK_IDENTIFIER)
+    }
+
+    getCardsFor(playerIdentifier: PlayerIdentifier): PlayingCard[] {
+        return [];
+    }
+
+    listCardsOf(playerIdentifier: PlayerIdentifier): PlayingCard[] {
+        return [];
+    }
+
+    moveCardOfPlayerToTable(cardToMove: PlayingCard, playerThatPlay: PlayerIdentifier): void {
+    }
+
+    moveToPointsOf(wonCards: PlayingCard[], playerThatGetCards: PlayerIdentifier): void {
     }
 
 }

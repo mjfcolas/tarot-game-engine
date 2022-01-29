@@ -1,8 +1,7 @@
 import {Observable} from "rxjs";
-import {TarotPlayer} from "../tarot-game/player/tarot-player";
-import {PlayingCard} from "../../../../tarot-card-deck";
 import {PlayableTable} from "./ports/playable-table";
 import {CardGamePlayer} from "./player/card-game-player";
+import {PlayingCard} from "tarot-card-deck";
 
 export interface CardGameManager {
     begin(): void

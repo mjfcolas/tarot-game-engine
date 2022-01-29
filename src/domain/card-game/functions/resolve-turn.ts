@@ -1,5 +1,5 @@
-import {PlayingCard} from "../../../../../tarot-card-deck";
 import {PlayerIdentifier} from "../player/card-game-player";
+import {PlayingCard} from "tarot-card-deck";
 
 export type PlayedCard = { playingCard: PlayingCard, playerIdentifier: PlayerIdentifier }
 export type WonCardsByPlayer = {

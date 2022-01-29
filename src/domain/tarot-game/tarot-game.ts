@@ -1,10 +1,10 @@
 import {TarotPlayer} from "./player/tarot-player";
 import {Announce} from "./announce/announce";
-import {PlayingCard} from "../../../../tarot-card-deck/src";
 import {AnnounceManager} from "./announce/announce-manager";
 import {CardGameManager} from "../card-game/card-game-manager";
 import {TarotTable} from "./table/ports/tarot-table";
 import {TarotDealer} from "./dealer/tarot-dealer";
+import {PlayingCard} from "tarot-card-deck";
 
 export type GameResult = {
     winner?: TarotPlayer,

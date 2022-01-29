@@ -1,7 +1,7 @@
-import {PlayingCard} from "../../../../../tarot-card-deck/src";
 import {TarotPlayer} from "../player/tarot-player";
 import {TarotTable} from "../table/ports/tarot-table";
 import {TarotDealer} from "./tarot-dealer";
+import {PlayingCard} from "tarot-card-deck";
 
 export type DealtCards = {
     playersDecks: PlayingCard[][]

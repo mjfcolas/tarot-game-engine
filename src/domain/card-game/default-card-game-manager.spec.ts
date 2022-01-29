@@ -1,10 +1,8 @@
 import {DefaultCardGameManager} from "./default-card-game-manager";
-import {DECK_78} from "../../../../tarot-card-deck";
 import {CardGameManager} from "./card-game-manager";
 import {MockedPlayableTable} from "./ports/__mock__/mocked-playable-table";
 import {DummyCardGamePlayer} from "./player/__dummy__/dummy-card-game-player";
-import {MockedTarotTable} from "../tarot-game/table/ports/__mock__/mocked-tarot-table";
-
+import {DECK_78} from "tarot-card-deck";
 
 describe(`Default card game manager`, () => {
 

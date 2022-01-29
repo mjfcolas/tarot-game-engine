@@ -1,5 +1,5 @@
-import {PlayingCard} from "../../../../../tarot-card-deck/src";
 import {DealtCards} from "../dealer/default-tarot-dealer";
+import {PlayingCard} from "tarot-card-deck";
 
 export function dealTarotCards(deck: PlayingCard[], numberOfPlayers: number, numberOfCardsInDog): DealtCards {
     const result = {
