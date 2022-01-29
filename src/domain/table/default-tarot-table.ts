@@ -40,4 +40,8 @@ export class DefaultTarotTable implements TarotTable {
         return this.table.gather(MAIN_DECK_IDENTIFIER)
     }
 
+    getNumberOfRemainingCardsToPlay(): number {
+        return 1;
+    }
+
 }
