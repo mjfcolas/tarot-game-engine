@@ -1,7 +1,7 @@
 import {Announce} from "./announce";
 import {AnnounceManager} from "./announce-manager";
 import {DefaultAnnounceManager} from "./default-announce-manager";
-import {DummyTarotPlayer} from "../player/dummy/dummy-tarot-player";
+import {DummyTarotPlayer} from "../player/__dummy__/dummy-tarot-player";
 import {lastValueFrom} from "rxjs";
 
 describe(`Default announce manager`, () => {

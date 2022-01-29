@@ -1,6 +1,5 @@
 import {PlayingCard} from "../../../../../tarot-card-deck";
-
-export type PlayerIdentifier = string;
+import {PlayerIdentifier} from "../player/tarot-player";
 
 export function resolveTarotTurn(playedCards: { playingCard: PlayingCard, playerIdentifier: PlayerIdentifier }[]): PlayerIdentifier{
     return ""

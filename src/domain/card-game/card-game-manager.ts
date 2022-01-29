@@ -1,12 +1,13 @@
 import {Observable} from "rxjs";
-import {TarotPlayer} from "../player/tarot-player";
+import {TarotPlayer} from "../tarot-game/player/tarot-player";
 import {PlayingCard} from "../../../../tarot-card-deck";
-import {TarotTable} from "../table/tarot-table";
+import {PlayableTable} from "./ports/playable-table";
+import {CardGamePlayer} from "./player/card-game-player";
 
 export interface CardGameManager {
     begin(): void
 
-    gameIsOver(): Observable<TarotTable>
+    gameIsOver(): Observable<PlayableTable>
 
-    play(player: TarotPlayer, card: PlayingCard)
+    play(player: CardGamePlayer, card: PlayingCard)
 }

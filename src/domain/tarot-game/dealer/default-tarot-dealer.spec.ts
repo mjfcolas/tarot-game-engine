@@ -1,12 +1,12 @@
-import {DefaultTarotTable} from "./default-tarot-table";
-import {DummyTarotPlayer} from "../player/dummy/dummy-tarot-player";
-import {DECK_78, PlayingCard} from "../../../../tarot-card-deck";
-import {CardDealer} from "../dealer/card-dealer";
-import {DefaultCardDealer} from "../dealer/default-card-dealer";
+import {DefaultTarotDealer} from "./default-tarot-dealer";
+import {DummyTarotPlayer} from "../player/__dummy__/dummy-tarot-player";
+import {DECK_78} from "../../../../../tarot-card-deck";
+import {dealTarotCards} from "../functions/tarot-card-dealer";
+import {TarotTable} from "../table/ports/tarot-table";
+import {PlayableTarotTable} from "../../../infrastructure/table/playable-tarot-table";
 
-describe('Default tarot table', function () {
-    const cardDealer: CardDealer = new DefaultCardDealer();
-    const playingCardDeck: readonly PlayingCard[] = DECK_78;
+describe('Tarot dealer', function () {
+    const table: TarotTable = new PlayableTarotTable(DECK_78)
     const players: DummyTarotPlayer[] = [
         new DummyTarotPlayer("1"),
         new DummyTarotPlayer("2"),
@@ -17,7 +17,7 @@ describe('Default tarot table', function () {
     test(`Given a tarot table, 
     when dealing cards, 
     then cards are distributed and games are emitted to each players`, () => {
-        const tarotTable: DefaultTarotTable = new DefaultTarotTable(playingCardDeck, players, cardDealer)
+        const tarotTable: DefaultTarotDealer = new DefaultTarotDealer(table, players, dealTarotCards)
         tarotTable.deal();
         const expectedNumberOfCards = 18;
         expect(players[0].availableCards.length).toEqual(expectedNumberOfCards);

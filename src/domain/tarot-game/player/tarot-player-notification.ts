@@ -1,11 +1,8 @@
-import {PlayingCard} from "../../../../tarot-card-deck/src";
 import {Announce} from "../announce/announce";
 import {TarotPlayer} from "./tarot-player";
+import {CardGamePlayerNotification} from "../../card-game/player/card-game-player-notification";
 
-export type PlayerNotification = {
-    type: "GOT_AVAILABLE_CARDS"
-    cards: PlayingCard[]
-} | {
+export type TarotPlayerNotification = CardGamePlayerNotification | {
     type: "ASKED_FOR_ANNOUNCE"
     availableAnnounces: Announce[]
 } | {
@@ -20,14 +17,4 @@ export type PlayerNotification = {
     announce?: Announce
 } | {
     type: "GAME_IS_OVER"
-} | {
-    type: "ASKED_TO_PLAY"
-} | {
-    type: "ERROR_WHILE_PLAYING"
-} | {
-    type: "PLAYER_HAS_PLAYED",
-    card: PlayingCard
-} | {
-    type: "TURN_RESULT_IS_KNOWN",
-    turnWinner: TarotPlayer
 }
