@@ -23,7 +23,7 @@ export class DummyCardGamePlayer implements CardGamePlayer {
             this.playError();
         }
         if (playerNotification.type === "PLAYER_HAS_PLAYED") {
-            this.playedCardIsKnown(playerNotification.card)
+            this.playedCardIsKnown(playerNotification.card, playerNotification.player)
         }
         if (playerNotification.type === "TURN_RESULT_IS_KNOWN") {
             this.turnResultIsKnown(playerNotification.turnWinner)

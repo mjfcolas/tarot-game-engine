@@ -1,4 +1,5 @@
 import {PlayingCard} from "../../../../../tarot-card-deck";
-import {PlayerIdentifier} from "../../tarot-game/functions/tarot-turn-resolver";
+import {PlayerIdentifier} from "../player/card-game-player";
 
-export type resolveTurn = (playedCards: { playingCard: PlayingCard, playerIdentifier: PlayerIdentifier }[]) => PlayerIdentifier
+export type PlayerWithCard = { playingCard: PlayingCard, playerIdentifier: PlayerIdentifier }
+export type resolveTurn = (playedCards: PlayerWithCard[]) => PlayerIdentifier
