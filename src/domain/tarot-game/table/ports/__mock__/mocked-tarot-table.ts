@@ -7,4 +7,6 @@ export class MockedTarotTable implements TarotTable {
     listCardsFor = jest.fn()
     putCardInDog = jest.fn()
     shuffle = jest.fn()
+    giveDogToPlayer = jest.fn()
+    moveToPointsOf = jest.fn()
 }

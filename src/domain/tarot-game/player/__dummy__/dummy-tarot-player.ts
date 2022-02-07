@@ -14,6 +14,8 @@ export class DummyTarotPlayer extends DummyCardGamePlayer implements TarotPlayer
     askedToPlay = jest.fn();
     playedCardIsKnown = jest.fn();
     turnResultIsKnown = jest.fn()
+    hasToSetAside = jest.fn();
+    setAsideError = jest.fn();
     public availableCards: PlayingCard[] = []
     public availableAnnounces: Announce[] = []
 
@@ -37,6 +39,12 @@ export class DummyTarotPlayer extends DummyCardGamePlayer implements TarotPlayer
         }
         if (playerNotification.type === "GAME_IS_OVER") {
             this.gameOver()
+        }
+        if(playerNotification.type === "ASKED_FOR_SET_ASIDE"){
+            this.hasToSetAside()
+        }
+        if(playerNotification.type === "ERROR_WHILE_SETTING_ASIDE"){
+            this.setAsideError();
         }
     }
 }
