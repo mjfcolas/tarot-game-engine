@@ -60,4 +60,8 @@ export class PlayableTarotTable implements PlayableTable, TarotTable {
 
     giveDogToPlayer(player: PlayerIdentifier): void {
     }
+
+    listPointsFor(player: PlayerIdentifier): PlayingCard[] {
+        return [];
+    }
 }
