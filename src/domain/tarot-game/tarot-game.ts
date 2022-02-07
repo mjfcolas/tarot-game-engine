@@ -5,6 +5,7 @@ import {CardGameManager} from "../card-game/card-game-manager";
 import {TarotTable} from "./table/ports/tarot-table";
 import {TarotDealer} from "./dealer/tarot-dealer";
 import {PlayingCard} from "tarot-card-deck";
+import {getAvailableCardsToSetAside} from "./functions/tarot-available-cards-to-set-aside";
 
 export type GameResult = {
     winner?: TarotPlayer,
@@ -17,16 +18,20 @@ export type GameResultWithDeck = {
 
 export class TarotGame {
 
+    private readonly numberOfCardsInDog = 6;
+    private taker: TarotPlayer = undefined;
+
     constructor(
         private readonly players: readonly TarotPlayer[],
         private readonly table: TarotTable,
         private readonly dealer: TarotDealer,
         private readonly announceManager: AnnounceManager,
         private readonly cardGameManager: CardGameManager,
+        private readonly getAvailableCardsToSetAside: getAvailableCardsToSetAside,
         private readonly endOfGameCallback: (gameResult: GameResultWithDeck) => void) {
         this.table.shuffle();
         this.table.cut();
-        this.dealer.deal();
+        this.dealer.deal(this.numberOfCardsInDog);
         this.resolveTakerAndContinueOrEndGame();
     }
 
@@ -34,11 +39,25 @@ export class TarotGame {
         this.announceManager.announce(playerThatAnnounce, announce)
     }
 
+    public setAside(playerThatSetAside: TarotPlayer, cardsSetAside: PlayingCard[]){
+        if(!this.taker || this.taker.id !== playerThatSetAside.id || cardsSetAside.length !== this.numberOfCardsInDog){
+            return TarotGame.notifyErrorWhileSettingAside(playerThatSetAside);
+        }
+        const availableCardsToSetAside = this.getAvailableCardsToSetAside(this.table.listCardsFor(this.taker.id))
+        const forbiddenCardSetAside = cardsSetAside.some(currentCardSetAside => !availableCardsToSetAside.some(availableCard => availableCard.identifier === currentCardSetAside.identifier))
+        if(forbiddenCardSetAside){
+            return TarotGame.notifyErrorWhileSettingAside(playerThatSetAside);
+        }
+        this.table.moveToPointsOf(cardsSetAside, playerThatSetAside.id);
+        this.cardGameManager.begin();
+    }
+
     private resolveTakerAndContinueOrEndGame() {
         this.announceManager.announcesAreComplete().subscribe((takerAnnounce) => {
             if (takerAnnounce) {
+                this.taker = takerAnnounce.taker;
                 this.players.forEach((playerToNotify) => TarotGame.notifyTakerIsKnown(playerToNotify, takerAnnounce.taker, takerAnnounce.announce))
-                this.cardGameManager.begin();
+                TarotGame.notifyPlayerHasToSetAside(this.taker)
             } else {
                 this.players.forEach((playerToNotify) => TarotGame.notifyGameIsOver(playerToNotify))
                 this.endOfGameCallback(this.noTakerGameResult())
@@ -61,6 +80,18 @@ export class TarotGame {
             announce: announce
         })
     }
+    private static notifyPlayerHasToSetAside(playerToNotify: TarotPlayer): void {
+        playerToNotify.notify({
+            type: "ASKED_FOR_SET_ASIDE"
+        })
+    }
+
+    private static notifyErrorWhileSettingAside(playerToNotify: TarotPlayer): void {
+        playerToNotify.notify({
+            type: "ERROR_WHILE_SETTING_ASIDE"
+        })
+    }
+
 
     private static notifyGameIsOver(playerToNotify: TarotPlayer): void {
         playerToNotify.notify({

@@ -11,6 +11,7 @@ import {dealTarotCards} from "./domain/tarot-game/functions/tarot-card-dealer";
 import {TarotDealer} from "./domain/tarot-game/dealer/tarot-dealer";
 import {PlayableTarotTable} from "./infrastructure/table/playable-tarot-table";
 import {DECK_78, PlayingCard} from "tarot-card-deck";
+import {defaultGetAvailableCardsToSetAside} from "./domain/tarot-game/functions/tarot-available-cards-to-set-aside";
 
 export function getTarotGame(
     playingCards: readonly PlayingCard[],
@@ -21,5 +22,5 @@ export function getTarotGame(
     const announceManager: AnnounceManager = new DefaultAnnounceManager(players);
     const cardGameManager: CardGameManager = new DefaultCardGameManager(resolveTarotTurn, getPlayableTarotCards, table, players);
     const dealer: TarotDealer = new DefaultTarotDealer(table, players, dealTarotCards)
-    return new TarotGame(players, table, dealer, announceManager, cardGameManager, endOfGameCallback);
+    return new TarotGame(players, table, dealer, announceManager, cardGameManager, defaultGetAvailableCardsToSetAside, endOfGameCallback);
 }

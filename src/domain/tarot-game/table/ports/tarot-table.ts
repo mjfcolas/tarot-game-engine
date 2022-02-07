@@ -13,4 +13,9 @@ export interface TarotTable {
     putCardInDog(cardIdentifier: string): void
 
     listCardsFor(player: PlayerIdentifier): PlayingCard[]
+
+    giveDogToPlayer(player: PlayerIdentifier): void
+
+    moveToPointsOf(wonCards: PlayingCard[], playerThatGetCards: PlayerIdentifier): void;
+
 }

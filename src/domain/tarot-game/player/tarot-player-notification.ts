@@ -17,4 +17,8 @@ export type TarotPlayerNotification = CardGamePlayerNotification | {
     announce?: Announce
 } | {
     type: "GAME_IS_OVER"
+} | {
+    type: "ASKED_FOR_SET_ASIDE"
+} | {
+    type: "ERROR_WHILE_SETTING_ASIDE"
 }
