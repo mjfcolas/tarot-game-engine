@@ -12,7 +12,7 @@ export interface TarotTable {
 
     putCardInDog(cardIdentifier: string): void
 
-    listCardsFor(player: PlayerIdentifier): PlayingCard[]
+    listCardsOf(player: PlayerIdentifier): PlayingCard[]
 
     listPointsFor(player: PlayerIdentifier): PlayingCard[]
 

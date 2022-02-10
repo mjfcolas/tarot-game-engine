@@ -48,7 +48,7 @@ export class DefaultCardGameManager implements CardGameManager {
         this.players.forEach((playerToNotify) => DefaultCardGameManager.notifyEndOfTurn(playerToNotify, turnWinner))
         turnResult.wonCardsByPlayer.forEach((wonCardsForPlayer) => this.table.moveToPointsOf(wonCardsForPlayer.wonCards, wonCardsForPlayer.playerIdentifier))
 
-        if (this.table.getNumberOfRemainingCardsToPlay() !== 0) {
+        if (this.table.getNumberOfRemainingCardsToPlayFor(this.players[0].id) !== 0) {
             this.beginTurn(turnWinner);
         } else {
             this.gameIsOverSubject.next(this.table);
@@ -106,7 +106,7 @@ class OneTurnManager {
         if (!this.currentPlayer || playerThatPlay.id !== this.currentPlayer.id) {
             return OneTurnManager.notifyErrorWhilePlaying(playerThatPlay);
         }
-        const playableCards = this.getPlayableCards(this.playedCards.map((currentPlayedCard) => currentPlayedCard.playingCard), this.table.getCardsFor(playerThatPlay.id))
+        const playableCards = this.getPlayableCards(this.playedCards.map((currentPlayedCard) => currentPlayedCard.playingCard), this.table.listCardsOf(playerThatPlay.id))
         if (playableCards.findIndex((playableCard) => card.identifier === playableCard.identifier) < 0) {
             return OneTurnManager.notifyErrorWhilePlaying(playerThatPlay);
         }

@@ -194,7 +194,7 @@ describe(`Default card game manager`, () => {
         then table after end of game is emitter`, (done) => {
         const cardGameManager: DefaultCardGameManager = new DefaultCardGameManager(mockedResolveTurn, mockedGetPlayableCards, mockedTarotTable, players);
         cardGameManager.begin();
-        mockedTarotTable.getNumberOfRemainingCardsToPlay.mockReturnValue(0);
+        mockedTarotTable.getNumberOfRemainingCardsToPlayFor.mockReturnValue(0);
         cardGameManager.gameIsOver().subscribe(endGameTable => {
             expect(endGameTable).toBeTruthy()
             done()

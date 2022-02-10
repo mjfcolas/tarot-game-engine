@@ -26,7 +26,7 @@ export class DefaultTarotDealer implements TarotDealer{
 
         this.players.forEach((player) => player.notify({
             type: "GOT_AVAILABLE_CARDS",
-            cards: this.tarotTable.listCardsFor(player.id)
+            cards: this.tarotTable.listCardsOf(player.id)
         }))
     }
 
