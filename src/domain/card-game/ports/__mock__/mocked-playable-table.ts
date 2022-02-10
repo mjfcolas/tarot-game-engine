@@ -1,7 +1,7 @@
 import {PlayableTable} from "../playable-table";
 
 export class MockedPlayableTable implements PlayableTable {
-    getNumberOfRemainingCardsToPlay = jest.fn()
+    getNumberOfRemainingCardsToPlayFor = jest.fn()
     getCardsFor = jest.fn()
     listCardsOf = jest.fn()
     moveToPointsOf = jest.fn()

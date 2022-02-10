@@ -45,7 +45,7 @@ export class TarotGame {
         if (!this.taker || this.taker.id !== playerThatSetAside.id || cardsSetAside.length !== this.numberOfCardsInDog) {
             return TarotGame.notifyErrorWhileSettingAside(playerThatSetAside);
         }
-        const availableCardsToSetAside = this.getAvailableCardsToSetAside(this.table.listCardsFor(this.taker.id))
+        const availableCardsToSetAside = this.getAvailableCardsToSetAside(this.table.listCardsOf(this.taker.id))
         const forbiddenCardSetAside = cardsSetAside.some(currentCardSetAside => !availableCardsToSetAside.some(availableCard => availableCard.identifier === currentCardSetAside.identifier))
         if (forbiddenCardSetAside) {
             return TarotGame.notifyErrorWhileSettingAside(playerThatSetAside);
