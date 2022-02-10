@@ -19,7 +19,7 @@ export function getTarotGame(
     players: readonly TarotPlayer[],
     endOfGameCallback: (gameResult: GameResultWithDeck) => void
 ): TarotGame {
-    const table: PlayableTarotTable = new PlayableTarotTable(DECK_78, players)
+    const table: PlayableTarotTable = new PlayableTarotTable(DECK_78)
     const announceManager: AnnounceManager = new DefaultAnnounceManager(players);
     const cardGameManager: CardGameManager = new DefaultCardGameManager(resolveTarotTurn, getPlayableTarotCards, table, players);
     const dealer: TarotDealer = new DefaultTarotDealer(table, players, dealTarotCards)
