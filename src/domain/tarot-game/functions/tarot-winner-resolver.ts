@@ -1,12 +1,17 @@
 import {PlayingCard} from "tarot-card-deck";
 import {PlayerIdentifier} from "../../card-game/player/card-game-player";
 
-export type PointsByPlayer = {
+export type CardsEarnedByPlayer = {
     playerIdentifier: PlayerIdentifier;
     wonCards: PlayingCard[]
 }
-export type winnerResolver = (playerPoints: PointsByPlayer[]) => PlayerIdentifier
+export type PlayerPoints = {
+    player: PlayerIdentifier,
+    numberOfPoints: number
+}
 
-export function tarotWinnerResolver(playerPoints: PointsByPlayer[]) {
-    return "";
+export type winnerResolver = (playerPoints: CardsEarnedByPlayer[], taker: PlayerIdentifier) => PlayerPoints[]
+
+export function tarotWinnerResolver(playerPoints: CardsEarnedByPlayer[]): PlayerPoints[] {
+    return [];
 }

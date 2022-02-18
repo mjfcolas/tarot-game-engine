@@ -6,10 +6,10 @@ import {TarotTable} from "./table/ports/tarot-table";
 import {TarotDealer} from "./dealer/tarot-dealer";
 import {PlayingCard} from "tarot-card-deck";
 import {getAvailableCardsToSetAside} from "./functions/tarot-available-cards-to-set-aside";
-import {winnerResolver} from "./functions/tarot-winner-resolver";
+import {PlayerPoints, winnerResolver} from "./functions/tarot-winner-resolver";
 
 export type GameResult = {
-    winner?: TarotPlayer,
+    pointsByPlayer: PlayerPoints[]
 }
 
 export type GameResultWithDeck = {
@@ -77,13 +77,14 @@ export class TarotGame {
     }
 
     private endedGameResult(): GameResultWithDeck {
-        const winnerIdentifier = this.tarotWinnerResolver(this.players.map(currentPlayer => ({
-            playerIdentifier: currentPlayer.id,
-            wonCards: this.table.listPointsFor(currentPlayer.id)
-        })))
+        const pointsByPlayer: PlayerPoints[] = this.tarotWinnerResolver(this.players.map(currentPlayer => ({
+                playerIdentifier: currentPlayer.id,
+                wonCards: this.table.listPointsFor(currentPlayer.id)
+            })),
+            this.taker.id)
         return {
             gameResult: {
-                winner: this.players.find(currentPlayer => currentPlayer.id === winnerIdentifier)
+                pointsByPlayer: pointsByPlayer
             },
             endOfGameDeck: this.table.gatherDeck()
         }

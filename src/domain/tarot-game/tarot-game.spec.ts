@@ -7,6 +7,7 @@ import {MockedCardGameManager} from "../card-game/__mock__/mocked-card-game-mana
 import {MockedTarotDealer} from "./dealer/__mock__/mocked-tarot-dealer";
 import {MockedTarotTable} from "./table/ports/__mock__/mocked-tarot-table";
 import {DECK_78} from "tarot-card-deck";
+import {PlayerPoints} from "./functions/tarot-winner-resolver";
 
 
 describe(`Tarot Game`, () => {
@@ -154,11 +155,13 @@ describe(`Tarot Game`, () => {
         const tarotGame = new TarotGame(players, table, dealer, announceManager, cardGameManager, mockedGetAvailableCardsToSetAside, mockedWinnerResolver, dummyEndOfGameCallback);
         tarotGame.setAside(players[1], DECK_78.slice(0, 6));
 
-        mockedWinnerResolver.mockReturnValue(players[0].id)
+        const pointsByPlayer: PlayerPoints[] = [];
+
+        mockedWinnerResolver.mockReturnValue(pointsByPlayer)
         endOfGameSubject.subscribe(_ => {
             expect(dummyEndOfGameCallback).toHaveBeenCalledWith({
                 gameResult : {
-                    winner: players[0]
+                    pointsByPlayer: pointsByPlayer
                 },
                 endOfGameDeck: undefined
             });
