@@ -3,24 +3,8 @@ import {Face, PlayingCardType, Suit} from "tarot-card-deck/dist/cards/playing-ca
 import {PlayingCard} from "tarot-card-deck";
 import {PlayerIdentifier} from "../../card-game/player/card-game-player";
 import {JOKER} from "tarot-card-deck/dist/cards/all-playing-cards";
+import {ClassicCard, isClassicCard, isTrumpCard, TrumpCard} from "../cards/card-types";
 
-type ClassicCard = {
-    identifier: string;
-    value: number;
-    suit: Suit;
-    type: PlayingCardType.CLASSIC;
-} | {
-    identifier: string;
-    face: Face;
-    suit: Suit;
-    type: PlayingCardType.FACE;
-};
-
-type TrumpCard = {
-    identifier: string;
-    value: number;
-    type: PlayingCardType.TRUMP;
-}
 const faceValues = {
     "J": 11,
     "C": 12,
@@ -33,16 +17,16 @@ export function resolveTarotTurn(playedCards: readonly PlayedCard[]): TurnResult
     let winnerPlayedCard: PlayedCard;
     if (trumpPlayed) {
         winnerPlayedCard = [...playedCards]
-            .filter(playedCard => playedCard.playingCard.type === PlayingCardType.TRUMP)
+            .filter(playedCard => isTrumpCard(playedCard.playingCard))
             .sort((a, b) => (b.playingCard as TrumpCard).value - (a.playingCard as TrumpCard).value)
             [0]
     } else {
         const masterPlayedCard: PlayingCard = [...playedCards]
-            .filter(playedCard => playedCard.playingCard.type === PlayingCardType.CLASSIC || playedCard.playingCard.type === PlayingCardType.FACE)[0].playingCard
+            .filter(playedCard => isClassicCard(playedCard.playingCard))[0].playingCard
         const masterSuit: Suit = (masterPlayedCard as ClassicCard).suit;
 
         winnerPlayedCard = [...playedCards]
-            .filter(playedCard => playedCard.playingCard.type === PlayingCardType.CLASSIC || playedCard.playingCard.type === PlayingCardType.FACE)
+            .filter(playedCard => isClassicCard(playedCard.playingCard))
             .filter(playedCard => (playedCard.playingCard as ClassicCard).suit === masterSuit)
             .sort((a, b) => sortClassicCards(a.playingCard as ClassicCard, b.playingCard as ClassicCard))
             [0]
