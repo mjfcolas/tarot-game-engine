@@ -1,5 +1,5 @@
 import {PlayedCard, TurnResult} from "../../card-game/functions/resolve-turn";
-import {Face, PlayingCardType, Suit} from "tarot-card-deck/dist/cards/playing-card";
+import {PlayingCardType, Suit} from "tarot-card-deck/dist/cards/playing-card";
 import {PlayingCard} from "tarot-card-deck";
 import {PlayerIdentifier} from "../../card-game/player/card-game-player";
 import {JOKER} from "tarot-card-deck/dist/cards/all-playing-cards";
