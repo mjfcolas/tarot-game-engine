@@ -28,7 +28,7 @@ export class TarotGame {
         private readonly dealer: TarotDealer,
         private readonly announceManager: AnnounceManager,
         private readonly cardGameManager: CardGameManager,
-        private readonly getAvailableCardsToSetAside: getAvailableCardsToSetAside,
+        private readonly getTarotAvailableCardsToSetAside: getAvailableCardsToSetAside,
         private readonly tarotWinnerResolver: winnerResolver,
         private readonly endOfGameCallback: (gameResult: GameResultWithDeck) => void) {
         this.table.shuffle();
@@ -45,7 +45,7 @@ export class TarotGame {
         if (!this.taker || this.taker.id !== playerThatSetAside.id || cardsSetAside.length !== this.numberOfCardsInDog) {
             return TarotGame.notifyErrorWhileSettingAside(playerThatSetAside);
         }
-        const availableCardsToSetAside = this.getAvailableCardsToSetAside(this.table.listCardsOf(this.taker.id))
+        const availableCardsToSetAside = this.getTarotAvailableCardsToSetAside(this.table.listCardsOf(this.taker.id))
         const forbiddenCardSetAside = cardsSetAside.some(currentCardSetAside => !availableCardsToSetAside.some(availableCard => availableCard.identifier === currentCardSetAside.identifier))
         if (forbiddenCardSetAside) {
             return TarotGame.notifyErrorWhileSettingAside(playerThatSetAside);
