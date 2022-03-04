@@ -235,7 +235,7 @@ describe(`Default card game manager`, () => {
         mockedResolveTurn.mockReturnValue(getTurnResultForPlayer(players[1]))
         playCompleteTurn(cardGameManager)
 
-        expect(localMockedTarotTable.moveToPointsOf).toHaveBeenCalledTimes(4)
+        expect(localMockedTarotTable.moveFromTableToPointsOf).toHaveBeenCalledTimes(4)
     });
 });
 

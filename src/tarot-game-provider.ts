@@ -1,5 +1,5 @@
 import {GameResultWithDeck, TarotGame} from "./domain/tarot-game/tarot-game";
-import {DefaultTarotDealer} from "./domain/tarot-game/dealer/default-tarot-dealer";
+import {DealFunction, DefaultTarotDealer} from "./domain/tarot-game/dealer/default-tarot-dealer";
 import {TarotPlayer} from "./domain/tarot-game/player/tarot-player";
 import {AnnounceManager} from "./domain/tarot-game/announce/announce-manager";
 import {DefaultAnnounceManager} from "./domain/tarot-game/announce/default-announce-manager";
@@ -17,11 +17,12 @@ import {tarotWinnerResolver} from "./domain/tarot-game/functions/tarot-winner-re
 export function getTarotGame(
     playingCards: readonly PlayingCard[],
     players: readonly TarotPlayer[],
-    endOfGameCallback: (gameResult: GameResultWithDeck) => void
+    endOfGameCallback: (gameResult: GameResultWithDeck) => void,
+    dealFunction: DealFunction = dealTarotCards
 ): TarotGame {
     const table: PlayableTarotTable = new PlayableTarotTable(DECK_78)
     const announceManager: AnnounceManager = new DefaultAnnounceManager(players);
     const cardGameManager: CardGameManager = new DefaultCardGameManager(resolveTarotTurn, getPlayableTarotCards, table, players);
-    const dealer: TarotDealer = new DefaultTarotDealer(table, players, dealTarotCards)
+    const dealer: TarotDealer = new DefaultTarotDealer(table, players, dealFunction)
     return new TarotGame(players, table, dealer, announceManager, cardGameManager, defaultGetAvailableCardsToSetAside, tarotWinnerResolver, endOfGameCallback);
 }

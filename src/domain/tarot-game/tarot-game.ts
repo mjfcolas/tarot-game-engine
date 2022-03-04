@@ -7,6 +7,7 @@ import {TarotDealer} from "./dealer/tarot-dealer";
 import {PlayingCard} from "tarot-card-deck";
 import {getAvailableCardsToSetAside} from "./functions/tarot-available-cards-to-set-aside";
 import {PlayerPoints, winnerResolver} from "./functions/tarot-winner-resolver";
+import {CardGamePlayer} from "../card-game/player/card-game-player";
 
 export type GameResult = {
     pointsByPlayer: PlayerPoints[]
@@ -50,9 +51,13 @@ export class TarotGame {
         if (forbiddenCardSetAside) {
             return TarotGame.notifyErrorWhileSettingAside(playerThatSetAside);
         }
-        this.table.moveToPointsOf(cardsSetAside, playerThatSetAside.id);
+        this.table.moveFromHandToPointsOf(cardsSetAside, playerThatSetAside.id);
         this.cardGameManager.gameIsOver().subscribe(_ => this.endOfGameCallback(this.endedGameResult()))
         this.cardGameManager.begin();
+    }
+
+    public play(playerThatPlay: TarotPlayer, card: PlayingCard) {
+        this.cardGameManager.play(playerThatPlay, card)
     }
 
     private resolveTakerAndContinueOrEndGame() {
@@ -60,6 +65,9 @@ export class TarotGame {
             if (takerAnnounce) {
                 this.taker = takerAnnounce.taker;
                 this.players.forEach((playerToNotify) => TarotGame.notifyTakerIsKnown(playerToNotify, takerAnnounce.taker, takerAnnounce.announce))
+                //TODO Improve tests
+                this.table.giveDogToPlayer(this.taker.id)
+                TarotGame.notifyCardsAvailable(this.taker, this.table.listCardsOf(this.taker.id))
                 TarotGame.notifyPlayerHasToSetAside(this.taker)
             } else {
                 this.players.forEach((playerToNotify) => TarotGame.notifyGameIsOver(playerToNotify))
@@ -113,6 +121,13 @@ export class TarotGame {
     private static notifyGameIsOver(playerToNotify: TarotPlayer): void {
         playerToNotify.notify({
             type: "GAME_IS_OVER"
+        })
+    }
+
+    private static notifyCardsAvailable(playerToNotify: TarotPlayer, cards: PlayingCard[]) {
+        playerToNotify.notify({
+            type: "GOT_AVAILABLE_CARDS",
+            cards: cards
         })
     }
 }

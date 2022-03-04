@@ -50,12 +50,20 @@ export class PlayableTarotTable implements PlayableTable, TarotTable {
         this.table.pick(cardToMove.identifier, PLAYER_PREFIX + playerThatPlay, TABLE_IDENTIFIER)
     }
 
-    moveToPointsOf(wonCards: PlayingCard[], playerThatGetCards: PlayerIdentifier): void {
+    moveFromTableToPointsOf(wonCards: PlayingCard[], playerThatGetCards: PlayerIdentifier): void {
         wonCards.forEach(wonCard => this.table.pick(wonCard.identifier, TABLE_IDENTIFIER, POINTS_PREFIX + playerThatGetCards))
     }
 
+    moveFromHandToPointsOf(wonCards: PlayingCard[], playerThatGetCards: PlayerIdentifier): void {
+        wonCards.forEach(wonCard => this.table.pick(wonCard.identifier, PLAYER_PREFIX + playerThatGetCards, POINTS_PREFIX + playerThatGetCards))
+    }
+
     giveDogToPlayer(player: PlayerIdentifier): void {
-        this.table.getPile(DOG_DECK_IDENTIFIER).list().forEach(dogCard => this.table.pick(dogCard.identifier, DOG_DECK_IDENTIFIER, PLAYER_PREFIX + player))
+        //TODO improve tests
+        const dogCards: PlayingCard[] = [...this.table.getPile(DOG_DECK_IDENTIFIER).list()];
+        dogCards.forEach(dogCard => {
+            this.table.pick(dogCard.identifier, DOG_DECK_IDENTIFIER, PLAYER_PREFIX + player)
+        })
     }
 
     listPointsFor(player: PlayerIdentifier): PlayingCard[] {

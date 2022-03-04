@@ -18,6 +18,5 @@ export interface TarotTable {
 
     giveDogToPlayer(player: PlayerIdentifier): void
 
-    moveToPointsOf(wonCards: PlayingCard[], playerThatGetCards: PlayerIdentifier): void;
-
+    moveFromHandToPointsOf(wonCards: PlayingCard[], playerThatGetCards: PlayerIdentifier): void
 }

@@ -8,12 +8,14 @@ export type DealtCards = {
     dog: PlayingCard[]
 }
 
+export type DealFunction = (deck: readonly PlayingCard[], numberOfPlayers: number, numberOfCardsInDog) => DealtCards;
+
 export class DefaultTarotDealer implements TarotDealer{
 
     constructor(
         private readonly tarotTable: TarotTable,
         private readonly players: readonly TarotPlayer[],
-        private readonly dealFunction: (deck: readonly PlayingCard[], numberOfPlayers: number, numberOfCardsInDog) => DealtCards) {
+        private readonly dealFunction: DealFunction) {
     }
 
     deal(): void {
