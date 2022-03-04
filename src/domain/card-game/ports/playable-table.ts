@@ -4,7 +4,7 @@ import {PlayingCard} from "tarot-card-deck";
 export interface PlayableTable {
     getNumberOfRemainingCardsToPlayFor(playerIdentifier: PlayerIdentifier): number
 
-    moveToPointsOf(wonCards: PlayingCard[], playerThatGetCards: PlayerIdentifier): void;
+    moveFromTableToPointsOf(wonCards: PlayingCard[], playerThatGetCards: PlayerIdentifier): void;
 
     listCardsOf(playerIdentifier: PlayerIdentifier): PlayingCard[];
 

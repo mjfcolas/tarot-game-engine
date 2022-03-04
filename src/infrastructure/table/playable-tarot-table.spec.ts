@@ -62,7 +62,7 @@ describe('Playable Tarot Table', function () {
         const table: PlayableTarotTable = new PlayableTarotTable(aDeck);
         table.giveCardTo(DECK_78[0].identifier, "P1")
         table.moveCardOfPlayerToTable(DECK_78[0], "P1")
-        table.moveToPointsOf([DECK_78[0]], "P2")
+        table.moveFromTableToPointsOf([DECK_78[0]], "P2")
         expect(table.listPointsFor("P2")).toEqual([DECK_78[0]]);
     })
 });

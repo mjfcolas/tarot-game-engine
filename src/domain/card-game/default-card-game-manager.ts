@@ -46,7 +46,7 @@ export class DefaultCardGameManager implements CardGameManager {
     private manageEndOfTurn(turnResult: TurnResult): void {
         const turnWinner: CardGamePlayer = this.players.find((currentPlayer) => currentPlayer.id === turnResult.winner)
         this.players.forEach((playerToNotify) => DefaultCardGameManager.notifyEndOfTurn(playerToNotify, turnWinner))
-        turnResult.wonCardsByPlayer.forEach((wonCardsForPlayer) => this.table.moveToPointsOf(wonCardsForPlayer.wonCards, wonCardsForPlayer.playerIdentifier))
+        turnResult.wonCardsByPlayer.forEach((wonCardsForPlayer) => this.table.moveFromTableToPointsOf(wonCardsForPlayer.wonCards, wonCardsForPlayer.playerIdentifier))
 
         if (this.table.getNumberOfRemainingCardsToPlayFor(this.players[0].id) !== 0) {
             this.beginTurn(turnWinner);
