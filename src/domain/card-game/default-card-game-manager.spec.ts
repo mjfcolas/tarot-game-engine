@@ -107,6 +107,15 @@ describe(`Default card game manager`, () => {
         expect(players[3].turnResultIsKnown).toHaveBeenCalledWith(players[0])
     });
 
+    test(`Given an ended turn,
+        when the turn winner is known
+        then the turn winner is asked to play a second time for the new turn`, () => {
+        const cardGameManager: DefaultCardGameManager = new DefaultCardGameManager(mockedResolveTurn, mockedGetPlayableCards, mockedTarotTable, players);
+        mockedResolveTurn.mockReturnValue(getTurnResultForPlayer(players[1]))
+        playCompleteTurn(cardGameManager)
+        expect(players[1].askedToPlay).toHaveBeenCalledTimes(2)
+    });
+
     test(`Given all the three first players that have played,
         when the last player plays its card,
         then turn winner is asked to play`, () => {
@@ -122,17 +131,17 @@ describe(`Default card game manager`, () => {
         when second player plays again,
         then third player is asked to play`, () => {
         const cardGameManager: DefaultCardGameManager = new DefaultCardGameManager(mockedResolveTurn, mockedGetPlayableCards, mockedTarotTable, players);
-        mockedResolveTurn.mockReturnValue(getTurnResultForPlayer(players[2]))
+        mockedResolveTurn.mockReturnValue(getTurnResultForPlayer(players[0]))
         playCompleteTurn(cardGameManager)
-        cardGameManager.play(players[2], aPlayingCard)
-        expect(players[3].askedToPlay).toHaveBeenCalled()
+        cardGameManager.play(players[1], aPlayingCard)
+        expect(players[2].askedToPlay).toHaveBeenCalled()
     });
 
     test(`Given the second player that just won last turn,
         when first player tries to play,
         then the player is notified that he cannot play`, () => {
         const cardGameManager: DefaultCardGameManager = new DefaultCardGameManager(mockedResolveTurn, mockedGetPlayableCards, mockedTarotTable, players);
-        mockedResolveTurn.mockReturnValue(getTurnResultForPlayer(players[2]))
+        mockedResolveTurn.mockReturnValue(getTurnResultForPlayer(players[1]))
         playCompleteTurn(cardGameManager)
 
         cardGameManager.play(players[0], aPlayingCard)
@@ -191,7 +200,7 @@ describe(`Default card game manager`, () => {
 
     test(`Given a turn that has just ended,
         when there is no more cards to play,
-        then table after end of game is emitter`, (done) => {
+        then table after end of game is emitted`, (done) => {
         const cardGameManager: DefaultCardGameManager = new DefaultCardGameManager(mockedResolveTurn, mockedGetPlayableCards, mockedTarotTable, players);
         cardGameManager.begin();
         mockedTarotTable.getNumberOfRemainingCardsToPlayFor.mockReturnValue(0);

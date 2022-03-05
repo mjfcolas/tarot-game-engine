@@ -99,7 +99,7 @@ class OneTurnManager {
 
     beginTurn(playerThatBegin: CardGamePlayer): void {
         this.currentPlayer = playerThatBegin
-        OneTurnManager.askToPlay(this.players[0])
+        OneTurnManager.askToPlay(this.currentPlayer)
     }
 
     play(playerThatPlay: CardGamePlayer, card: PlayingCard) {
@@ -107,7 +107,7 @@ class OneTurnManager {
             return OneTurnManager.notifyErrorWhilePlaying(playerThatPlay);
         }
         const playableCards = this.getPlayableCards(this.playedCards.map((currentPlayedCard) => currentPlayedCard.playingCard), this.table.listCardsOf(playerThatPlay.id))
-        if (playableCards.findIndex((playableCard) => card.identifier === playableCard.identifier) < 0) {
+        if (!playableCards.some((playableCard) => card.identifier === playableCard.identifier)) {
             return OneTurnManager.notifyErrorWhilePlaying(playerThatPlay);
         }
 
@@ -118,7 +118,8 @@ class OneTurnManager {
 
         const currentPlayerIndex = this.players.findIndex(playerToTry => playerThatPlay.id === playerToTry.id);
         const nextPlayerIndex = currentPlayerIndex != this.players.length - 1 ? currentPlayerIndex + 1 : 0;
-        if (this.playedCards.length === this.players.length) {
+        const allPlayersHasPlayedTurn: boolean = this.playedCards.length === this.players.length;
+        if (allPlayersHasPlayedTurn) {
             const turnResult: TurnResult = this.resolveTurn(this.playedCards);
             this.turnResult.next(turnResult);
         } else {

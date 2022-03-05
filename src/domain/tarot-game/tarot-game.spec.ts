@@ -132,19 +132,6 @@ describe(`Tarot Game`, () => {
         expect(players[1].setAsideError).toHaveBeenCalled()
     })
 
-    test(`Given a determined taker,
-    when the taker set asides an incorrect number of cards,
-    then the player is notified that he cannot perform this action`, () => {
-        announceManager.announcesAreComplete.mockReturnValue(of({
-            taker: players[1],
-            announce: Announce.PRISE
-        }));
-        mockedGetIncorrectCardsSetAside.mockReturnValue(DECK_78.slice(0, 12))
-        const tarotGame = new TarotGame(players, table, dealer, announceManager, cardGameManager, mockedGetIncorrectCardsSetAside, mockedCountEndOfGameScore, dummyEndOfGameCallback);
-        tarotGame.setAside(players[1], DECK_78.slice(0, 4));
-        expect(players[1].setAsideError).toHaveBeenCalled()
-    })
-
     test(`Given no determined taker,
     when a player try to set cards aside,
     then the player is notified that he cannot perform this action`, () => {
@@ -153,10 +140,25 @@ describe(`Tarot Game`, () => {
         expect(players[0].setAsideError).toHaveBeenCalled()
     })
 
-
     test(`Given a determined taker,
     when a player that is not the taker try to set cards aside,
     then the player is notifies that he cannot perform this action`, () => {
+        announceManager.announcesAreComplete.mockReturnValue(of({
+            taker: players[1],
+            announce: Announce.PRISE
+        }));
+        mockedGetIncorrectCardsSetAside.mockReturnValue([])
+        cardGameManager.gameIsOver.mockReturnValue(new ReplaySubject(1))
+        table.listCardsOf.mockReturnValue([])
+        const tarotGame = new TarotGame(players, table, dealer, announceManager, cardGameManager, mockedGetIncorrectCardsSetAside, mockedCountEndOfGameScore, dummyEndOfGameCallback);
+        tarotGame.setAside(players[1], DECK_78.slice(0, 6));
+        tarotGame.setAside(players[1], DECK_78.slice(0, 6));
+        expect(players[1].setAsideError).toHaveBeenCalled()
+    })
+
+    test(`Given a taker that has already set aside cards,
+    when the taker try to set cards aside,
+    then the player is notified that he cannot perform this action`, () => {
         announceManager.announcesAreComplete.mockReturnValue(of({
             taker: players[1],
             announce: Announce.PRISE
@@ -165,6 +167,7 @@ describe(`Tarot Game`, () => {
         tarotGame.setAside(players[0], []);
         expect(players[0].setAsideError).toHaveBeenCalled()
     })
+
 
     test(`Given a game that has begun, 
     when game is over, 
