@@ -10,7 +10,7 @@ export type PlayerPoints = {
     numberOfPoints: number
 }
 
-export type winnerResolver = (playerPoints: CardsEarnedByPlayer[], taker: PlayerIdentifier) => PlayerPoints[]
+export type WinnerResolver = (playerPoints: CardsEarnedByPlayer[], taker: PlayerIdentifier) => PlayerPoints[]
 
 export function tarotWinnerResolver(playerPoints: CardsEarnedByPlayer[]): PlayerPoints[] {
     return [];
