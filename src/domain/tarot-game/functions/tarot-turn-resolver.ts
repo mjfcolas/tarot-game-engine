@@ -2,7 +2,6 @@ import {PlayedCard, TurnResult} from "../../card-game/functions/resolve-turn";
 import {PlayingCardType, Suit} from "tarot-card-deck/dist/cards/playing-card";
 import {PlayingCard} from "tarot-card-deck";
 import {PlayerIdentifier} from "../../card-game/player/card-game-player";
-import {JOKER} from "tarot-card-deck/dist/cards/all-playing-cards";
 import {ClassicCard, isClassicCard, isTrumpCard, TrumpCard} from "../cards/card-types";
 
 const faceValues = {
@@ -34,21 +33,13 @@ export function resolveTarotTurn(playedCards: readonly PlayedCard[]): TurnResult
 
     const players: PlayerIdentifier[] = playedCards.map(playedCard => playedCard.playerIdentifier);
 
-    const excuseIndex: number = playedCards.findIndex(playedCard => playedCard.playingCard === JOKER);
-    const playerThatPlayedExcuse: PlayerIdentifier = excuseIndex > -1 ? playedCards[excuseIndex].playerIdentifier : undefined;
-
     return {
         winner: winnerPlayedCard.playerIdentifier,
         wonCardsByPlayer: players.map(currentPlayer => {
             if (currentPlayer === winnerPlayedCard.playerIdentifier) {
                 return {
                     playerIdentifier: currentPlayer,
-                    wonCards: playedCards.map(playedCard => playedCard.playingCard).filter(playingCard => playingCard !== JOKER)
-                }
-            } else if (currentPlayer === playerThatPlayedExcuse) {
-                return {
-                    playerIdentifier: currentPlayer,
-                    wonCards: playedCards.map(playedCard => playedCard.playingCard).filter(playingCard => playingCard === JOKER)
+                    wonCards: playedCards.map(playedCard => playedCard.playingCard)
                 }
             } else {
                 return {

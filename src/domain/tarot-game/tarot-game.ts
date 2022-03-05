@@ -6,14 +6,11 @@ import {TarotTable} from "./table/ports/tarot-table";
 import {TarotDealer} from "./dealer/tarot-dealer";
 import {PlayingCard} from "tarot-card-deck";
 import {GetIncorrectCardsSetAside} from "./functions/tarot-available-cards-to-set-aside";
-import {PlayerPoints, WinnerResolver} from "./functions/tarot-winner-resolver";
-
-export type GameResult = {
-    pointsByPlayer: PlayerPoints[]
-}
+import {CountEndGameScore} from "./functions/count-tarot-end-game-score";
+import {isExcuse} from "./cards/card-types";
 
 export type GameResultWithDeck = {
-    gameResult: GameResult
+    numberOfPointsForTaker: number
     endOfGameDeck: readonly PlayingCard[]
 }
 
@@ -21,6 +18,7 @@ export class TarotGame {
 
     private readonly numberOfCardsInDog = 6;
     private taker: TarotPlayer = undefined;
+    private takerHasExcuseAtStartOfGame = undefined;
 
     constructor(
         private readonly players: readonly TarotPlayer[],
@@ -29,7 +27,7 @@ export class TarotGame {
         private readonly announceManager: AnnounceManager,
         private readonly cardGameManager: CardGameManager,
         private readonly verifyCardsSetAside: GetIncorrectCardsSetAside,
-        private readonly tarotWinnerResolver: WinnerResolver,
+        private readonly countEndGameScore: CountEndGameScore,
         private readonly endOfGameCallback: (gameResult: GameResultWithDeck) => void) {
         this.table.shuffle();
         this.table.cut();
@@ -50,6 +48,7 @@ export class TarotGame {
             return TarotGame.notifyErrorWhileSettingAside(playerThatSetAside);
         }
         this.table.moveFromHandToPointsOf(cardsSetAside, playerThatSetAside.id);
+        this.takerHasExcuseAtStartOfGame = this.table.listCardsOf(this.taker.id).some((playingCard: PlayingCard) => isExcuse(playingCard))
         this.cardGameManager.gameIsOver().subscribe(_ => this.endOfGameCallback(this.endedGameResult()))
         this.cardGameManager.begin();
     }
@@ -76,21 +75,17 @@ export class TarotGame {
 
     private noTakerGameResult(): GameResultWithDeck {
         return {
-            gameResult: undefined,
+            numberOfPointsForTaker: undefined,
             endOfGameDeck: this.table.gatherDeck()
         }
     }
 
     private endedGameResult(): GameResultWithDeck {
-        const pointsByPlayer: PlayerPoints[] = this.tarotWinnerResolver(this.players.map(currentPlayer => ({
-                playerIdentifier: currentPlayer.id,
-                wonCards: this.table.listPointsFor(currentPlayer.id)
-            })),
-            this.taker.id)
+        const endGameScoreForTaker: number = this.countEndGameScore(
+            this.table.listPointsFor(this.taker.id),
+            this.takerHasExcuseAtStartOfGame);
         return {
-            gameResult: {
-                pointsByPlayer: pointsByPlayer
-            },
+            numberOfPointsForTaker: endGameScoreForTaker,
             endOfGameDeck: this.table.gatherDeck()
         }
     }
