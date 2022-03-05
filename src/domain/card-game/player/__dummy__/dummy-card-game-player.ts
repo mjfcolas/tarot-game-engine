@@ -7,6 +7,7 @@ export class DummyCardGamePlayer implements CardGamePlayer {
     askedToPlay = jest.fn();
     playedCardIsKnown = jest.fn();
     turnResultIsKnown = jest.fn()
+    availableCardsAreKnown = jest.fn()
     public availableCards: PlayingCard[] = []
 
     constructor(public readonly id: string) {
@@ -14,6 +15,7 @@ export class DummyCardGamePlayer implements CardGamePlayer {
 
     notify(playerNotification: CardGamePlayerNotification) {
         if (playerNotification.type === "GOT_AVAILABLE_CARDS") {
+            this.availableCardsAreKnown();
             this.availableCards = playerNotification.cards
         }
         if (playerNotification.type === "ASKED_TO_PLAY") {

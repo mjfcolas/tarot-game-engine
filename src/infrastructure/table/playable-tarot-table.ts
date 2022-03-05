@@ -59,7 +59,6 @@ export class PlayableTarotTable implements PlayableTable, TarotTable {
     }
 
     giveDogToPlayer(player: PlayerIdentifier): void {
-        //TODO improve tests
         const dogCards: PlayingCard[] = [...this.table.getPile(DOG_DECK_IDENTIFIER).list()];
         dogCards.forEach(dogCard => {
             this.table.pick(dogCard.identifier, DOG_DECK_IDENTIFIER, PLAYER_PREFIX + player)

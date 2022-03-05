@@ -10,4 +10,4 @@ export type TurnResult = {
     winner: PlayerIdentifier;
     wonCardsByPlayer: readonly WonCardsByPlayer[]
 }
-export type resolveTurn = (playedCards: PlayedCard[]) => TurnResult
+export type ResolveTurn = (playedCards: PlayedCard[]) => TurnResult

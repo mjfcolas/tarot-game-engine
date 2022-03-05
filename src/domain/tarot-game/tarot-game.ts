@@ -5,9 +5,8 @@ import {CardGameManager} from "../card-game/card-game-manager";
 import {TarotTable} from "./table/ports/tarot-table";
 import {TarotDealer} from "./dealer/tarot-dealer";
 import {PlayingCard} from "tarot-card-deck";
-import {getAvailableCardsToSetAside} from "./functions/tarot-available-cards-to-set-aside";
-import {PlayerPoints, winnerResolver} from "./functions/tarot-winner-resolver";
-import {CardGamePlayer} from "../card-game/player/card-game-player";
+import {GetAvailableCardsToSetAside} from "./functions/tarot-available-cards-to-set-aside";
+import {PlayerPoints, WinnerResolver} from "./functions/tarot-winner-resolver";
 
 export type GameResult = {
     pointsByPlayer: PlayerPoints[]
@@ -29,8 +28,8 @@ export class TarotGame {
         private readonly dealer: TarotDealer,
         private readonly announceManager: AnnounceManager,
         private readonly cardGameManager: CardGameManager,
-        private readonly getTarotAvailableCardsToSetAside: getAvailableCardsToSetAside,
-        private readonly tarotWinnerResolver: winnerResolver,
+        private readonly getTarotAvailableCardsToSetAside: GetAvailableCardsToSetAside,
+        private readonly tarotWinnerResolver: WinnerResolver,
         private readonly endOfGameCallback: (gameResult: GameResultWithDeck) => void) {
         this.table.shuffle();
         this.table.cut();
@@ -65,7 +64,6 @@ export class TarotGame {
             if (takerAnnounce) {
                 this.taker = takerAnnounce.taker;
                 this.players.forEach((playerToNotify) => TarotGame.notifyTakerIsKnown(playerToNotify, takerAnnounce.taker, takerAnnounce.announce))
-                //TODO Improve tests
                 this.table.giveDogToPlayer(this.taker.id)
                 TarotGame.notifyCardsAvailable(this.taker, this.table.listCardsOf(this.taker.id))
                 TarotGame.notifyPlayerHasToSetAside(this.taker)

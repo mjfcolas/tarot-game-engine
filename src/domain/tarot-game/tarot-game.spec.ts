@@ -66,6 +66,20 @@ describe(`Tarot Game`, () => {
         expect(dummyEndOfGameCallback).toHaveBeenCalled();
     })
 
+    test(`Given an initialized game, 
+    when taker is determined,
+    then taker retrieve dog's cards and is notified `, () => {
+        announceManager.announcesAreComplete.mockReturnValue(of({
+            taker: players[1],
+            announce: Announce.PRISE
+        }));
+        new TarotGame(players, table, dealer, announceManager, cardGameManager, mockedGetAvailableCardsToSetAside, mockedWinnerResolver, dummyEndOfGameCallback);
+
+        expect(table.giveDogToPlayer).toHaveBeenCalledWith(players[1].id)
+        expect(players[1].availableCardsAreKnown).toHaveBeenCalled()
+
+    })
+
     test(`Given an initialized game,
     when taker is determined,
     then taker is notify that he has to set aside cards`, () => {

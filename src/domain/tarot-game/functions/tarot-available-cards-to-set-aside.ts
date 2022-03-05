@@ -2,7 +2,7 @@ import {PlayingCard} from "tarot-card-deck";
 import {Face, PlayingCardType} from "tarot-card-deck/dist/cards/playing-card";
 
 
-export type getAvailableCardsToSetAside = (allAvailableCards: PlayingCard[]) => PlayingCard[]
+export type GetAvailableCardsToSetAside = (allAvailableCards: PlayingCard[]) => PlayingCard[]
 
 export function defaultGetAvailableCardsToSetAside(allAvailableCards: PlayingCard[]): PlayingCard[] {
     return allAvailableCards.filter(currentCard =>
