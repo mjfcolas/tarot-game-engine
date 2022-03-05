@@ -8,7 +8,6 @@ import {MockedTarotDealer} from "./dealer/__mock__/mocked-tarot-dealer";
 import {MockedTarotTable} from "./table/ports/__mock__/mocked-tarot-table";
 import {DECK_78} from "tarot-card-deck";
 import {PlayerPoints} from "./functions/tarot-winner-resolver";
-import {getIncorrectCardsSetAside} from "./functions/tarot-available-cards-to-set-aside";
 
 
 describe(`Tarot Game`, () => {
@@ -115,7 +114,7 @@ describe(`Tarot Game`, () => {
             announce: Announce.PRISE
         }));
         const tarotGame = new TarotGame(players, table, dealer, announceManager, cardGameManager, mockedGetIncorrectCardsSetAside, mockedWinnerResolver, dummyEndOfGameCallback);
-        tarotGame.setAside(players[1], DECK_78.slice(10, 4));
+        tarotGame.setAside(players[1], DECK_78.slice(10, 14));
         expect(players[1].setAsideError).toHaveBeenCalled()
     })
 
@@ -126,10 +125,10 @@ describe(`Tarot Game`, () => {
             taker: players[1],
             announce: Announce.PRISE
         }));
-        mockedGetIncorrectCardsSetAside.mockReturnValue(DECK_78.slice(10, 3))
+        mockedGetIncorrectCardsSetAside.mockReturnValue(DECK_78.slice(10, 13))
         const tarotGame = new TarotGame(players, table, dealer, announceManager, cardGameManager, mockedGetIncorrectCardsSetAside, mockedWinnerResolver, dummyEndOfGameCallback);
 
-        tarotGame.setAside(players[1], DECK_78.slice(10, 6));
+        tarotGame.setAside(players[1], DECK_78.slice(10, 16));
         expect(players[1].setAsideError).toHaveBeenCalled()
     })
 
@@ -187,7 +186,7 @@ describe(`Tarot Game`, () => {
         mockedWinnerResolver.mockReturnValue(pointsByPlayer)
         endOfGameSubject.subscribe(_ => {
             expect(dummyEndOfGameCallback).toHaveBeenCalledWith({
-                gameResult : {
+                gameResult: {
                     pointsByPlayer: pointsByPlayer
                 },
                 endOfGameDeck: undefined
