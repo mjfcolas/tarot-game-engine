@@ -237,53 +237,10 @@ describe(`Tarot turn resolver`, () => {
         }
         expect(resolveTarotTurn(playedCards)).toEqual(expectedTurnResult);
     });
-    test(`Given 3 spades and excuse,
-        when resolving turn,
-        then the player that has played the biggest spade wins all the spades and the player that has played excuse keep it`, () => {
-        const playedCards: readonly PlayedCard[] = [
-            {
-                playerIdentifier: "P0",
-                playingCard: SPADE_1
-            },
-            {
-                playerIdentifier: "P1",
-                playingCard: SPADE_3
-            },
-            {
-                playerIdentifier: "P2",
-                playingCard: JOKER
-            },
-            {
-                playerIdentifier: "P3",
-                playingCard: SPADE_4
-            },
-        ]
-        const expectedTurnResult: TurnResult = {
-            winner: "P3",
-            wonCardsByPlayer: [
-                {
-                    playerIdentifier: "P0",
-                    wonCards: []
-                },
-                {
-                    playerIdentifier: "P1",
-                    wonCards: []
-                },
-                {
-                    playerIdentifier: "P2",
-                    wonCards: [JOKER]
-                },
-                {
-                    playerIdentifier: "P3",
-                    wonCards: [SPADE_1, SPADE_3, SPADE_4]
-                },
-            ]
-        }
-        expect(resolveTarotTurn(playedCards)).toEqual(expectedTurnResult);
-    });
+
     test(`Given excuse played as first card and 3 spades,
         when resolving turn,
-        then the player that has played the biggest spade wins all the spades and the player that has played excuse keep it`, () => {
+        then the player that has played the biggest spade wins all the cards`, () => {
         const playedCards: readonly PlayedCard[] = [
             {
                 playerIdentifier: "P0",
@@ -307,7 +264,7 @@ describe(`Tarot turn resolver`, () => {
             wonCardsByPlayer: [
                 {
                     playerIdentifier: "P0",
-                    wonCards: [JOKER]
+                    wonCards: []
                 },
                 {
                     playerIdentifier: "P1",
@@ -319,7 +276,7 @@ describe(`Tarot turn resolver`, () => {
                 },
                 {
                     playerIdentifier: "P3",
-                    wonCards: [SPADE_3, SPADE_2, SPADE_4]
+                    wonCards: [JOKER, SPADE_3, SPADE_2, SPADE_4]
                 },
             ]
         }

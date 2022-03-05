@@ -12,7 +12,7 @@ import {TarotDealer} from "./domain/tarot-game/dealer/tarot-dealer";
 import {PlayableTarotTable} from "./infrastructure/table/playable-tarot-table";
 import {DECK_78, PlayingCard} from "tarot-card-deck";
 import {getIncorrectCardsSetAside} from "./domain/tarot-game/functions/tarot-available-cards-to-set-aside";
-import {tarotWinnerResolver} from "./domain/tarot-game/functions/tarot-winner-resolver";
+import {countTarotEndGameScore} from "./domain/tarot-game/functions/count-tarot-end-game-score";
 
 export function getTarotGame(
     playingCards: readonly PlayingCard[],
@@ -24,5 +24,5 @@ export function getTarotGame(
     const announceManager: AnnounceManager = new DefaultAnnounceManager(players);
     const cardGameManager: CardGameManager = new DefaultCardGameManager(resolveTarotTurn, getPlayableTarotCards, table, players);
     const dealer: TarotDealer = new DefaultTarotDealer(table, players, dealFunction)
-    return new TarotGame(players, table, dealer, announceManager, cardGameManager, getIncorrectCardsSetAside, tarotWinnerResolver, endOfGameCallback);
+    return new TarotGame(players, table, dealer, announceManager, cardGameManager, getIncorrectCardsSetAside, countTarotEndGameScore, endOfGameCallback);
 }
