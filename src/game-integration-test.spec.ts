@@ -241,8 +241,6 @@ class TestPlayer implements TarotPlayer {
     }
 
     notify(playerNotification: TarotPlayerNotification | CardGamePlayerNotification) {
-        console.log(this.id)
-        console.log(playerNotification)
     }
 
 }
