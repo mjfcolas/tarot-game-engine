@@ -18,6 +18,7 @@ export class TarotGame {
 
     private readonly numberOfCardsInDog = 6;
     private taker: TarotPlayer = undefined;
+    private gameHasBegan = false;
     private takerHasExcuseAtStartOfGame = undefined;
 
     constructor(
@@ -40,7 +41,7 @@ export class TarotGame {
     }
 
     public setAside(playerThatSetAside: TarotPlayer, cardsSetAside: PlayingCard[]) {
-        if (!this.taker || this.taker.id !== playerThatSetAside.id || cardsSetAside.length !== this.numberOfCardsInDog) {
+        if (this.gameHasBegan || !this.taker || this.taker.id !== playerThatSetAside.id || cardsSetAside.length !== this.numberOfCardsInDog) {
             return TarotGame.notifyErrorWhileSettingAside(playerThatSetAside);
         }
         const forbiddenCardsSetAside = this.verifyCardsSetAside(this.table.listCardsOf(this.taker.id), cardsSetAside)
@@ -51,6 +52,7 @@ export class TarotGame {
         this.takerHasExcuseAtStartOfGame = this.table.listCardsOf(this.taker.id).some((playingCard: PlayingCard) => isExcuse(playingCard))
         this.cardGameManager.gameIsOver().subscribe(_ => this.endOfGameCallback(this.endedGameResult()))
         this.cardGameManager.begin();
+        this.gameHasBegan = true;
     }
 
     public play(playerThatPlay: TarotPlayer, card: PlayingCard) {
