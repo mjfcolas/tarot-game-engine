@@ -12,12 +12,18 @@ import {DECK_78} from "tarot-card-deck";
 describe(`Tarot Game`, () => {
 
     const dummyEndOfGameCallback = jest.fn()
-    const players: DummyTarotPlayer[] = [
-        new DummyTarotPlayer("1"),
-        new DummyTarotPlayer("2"),
-        new DummyTarotPlayer("3"),
-        new DummyTarotPlayer("4")
-    ]
+
+    let players: DummyTarotPlayer[]
+    beforeEach(() => {
+        players = [
+            new DummyTarotPlayer("1"),
+            new DummyTarotPlayer("2"),
+            new DummyTarotPlayer("3"),
+            new DummyTarotPlayer("4")
+        ]
+
+    })
+
     const announceManager: MockedAnnounceManager = new MockedAnnounceManager();
     const table: MockedTarotTable = new MockedTarotTable();
     const dealer: MockedTarotDealer = new MockedTarotDealer();
@@ -93,7 +99,7 @@ describe(`Tarot Game`, () => {
 
     test(`Given a determined taker,
     when the taker set asides correct cards,
-    then card game begin`, () => {
+    then taker is notified with available cards and card game begin`, () => {
         announceManager.announcesAreComplete.mockReturnValue(of({
             taker: players[1],
             announce: Announce.PRISE
@@ -103,6 +109,7 @@ describe(`Tarot Game`, () => {
         table.listCardsOf.mockReturnValue([])
         const tarotGame = new TarotGame(players, table, dealer, announceManager, cardGameManager, mockedGetIncorrectCardsSetAside, mockedCountEndOfGameScore, dummyEndOfGameCallback);
         tarotGame.setAside(players[1], DECK_78.slice(0, 6));
+        expect(players[1].availableCardsAreKnown).toHaveBeenCalledTimes(2)
         expect(cardGameManager.begin).toHaveBeenCalled()
     })
 
@@ -171,7 +178,7 @@ describe(`Tarot Game`, () => {
 
     test(`Given a game that has begun, 
     when game is over, 
-    then end of game callback is triggered with expected winner`, (done) => {
+    then end of game callback is triggered with expected winner and all players are notified`, (done) => {
         announceManager.announcesAreComplete.mockReturnValue(of({
             taker: players[1],
             announce: Announce.PRISE
@@ -193,6 +200,10 @@ describe(`Tarot Game`, () => {
                 numberOfPointsForTaker: takerEndOfGameScore,
                 endOfGameDeck: undefined
             });
+            expect(players[0].gameOver).toHaveBeenCalledWith(takerEndOfGameScore);
+            expect(players[1].gameOver).toHaveBeenCalledWith(takerEndOfGameScore);
+            expect(players[2].gameOver).toHaveBeenCalledWith(takerEndOfGameScore);
+            expect(players[3].gameOver).toHaveBeenCalledWith(takerEndOfGameScore);
             done()
         })
 

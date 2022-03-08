@@ -38,7 +38,7 @@ export class DummyTarotPlayer extends DummyCardGamePlayer implements TarotPlayer
             this.takerIsKnown(playerNotification.player, playerNotification.announce)
         }
         if (playerNotification.type === "GAME_IS_OVER") {
-            this.gameOver()
+            this.gameOver(playerNotification.numberOfPointsForTaker)
         }
         if(playerNotification.type === "ASKED_FOR_SET_ASIDE"){
             this.hasToSetAside()

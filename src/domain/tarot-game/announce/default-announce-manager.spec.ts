@@ -120,6 +120,26 @@ describe(`Default announce manager`, () => {
         expect(takerAnnounce.taker).toEqual(players[1])
     })
 
+    test(`Given an announce manager with all announces done, 
+    when player tries to announce, 
+    then an error is emitted to the player`, async () => {
+        const announceManager: AnnounceManager = new DefaultAnnounceManager(players)
+        announceManager.beginAnnounces();
+        announceManager.announce(players[0], null)
+        announceManager.announce(players[1], Announce.PRISE)
+        announceManager.announce(players[2], null)
+        announceManager.announce(players[3], null)
+
+        announceManager.announce(players[0], null)
+        expect(players[0].announceError).toHaveBeenCalled()
+        announceManager.announce(players[1], null)
+        expect(players[1].announceError).toHaveBeenCalled()
+        announceManager.announce(players[2], null)
+        expect(players[2].announceError).toHaveBeenCalled()
+        announceManager.announce(players[3], null)
+        expect(players[3].announceError).toHaveBeenCalled()
+    })
+
     test(`Given an announce manager and all announces are done, 
     when a player announces something, 
     then an error is emitted to the player`, () => {
