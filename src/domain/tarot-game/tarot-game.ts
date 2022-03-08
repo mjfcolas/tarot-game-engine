@@ -50,7 +50,8 @@ export class TarotGame {
         }
         this.table.moveFromHandToPointsOf(cardsSetAside, playerThatSetAside.id);
         this.takerHasExcuseAtStartOfGame = this.table.listCardsOf(this.taker.id).some((playingCard: PlayingCard) => isExcuse(playingCard))
-        this.cardGameManager.gameIsOver().subscribe(_ => this.endOfGameCallback(this.endedGameResult()))
+        this.cardGameManager.gameIsOver().subscribe(_ => this.endGame())
+        TarotGame.notifyCardsAvailable(this.taker, this.table.listCardsOf(this.taker.id))
         this.cardGameManager.begin();
         this.gameHasBegan = true;
     }
@@ -68,7 +69,7 @@ export class TarotGame {
                 TarotGame.notifyCardsAvailable(this.taker, this.table.listCardsOf(this.taker.id))
                 TarotGame.notifyPlayerHasToSetAside(this.taker)
             } else {
-                this.players.forEach((playerToNotify) => TarotGame.notifyGameIsOver(playerToNotify))
+                this.players.forEach((playerToNotify) => TarotGame.notifyGameIsOver(playerToNotify, null))
                 this.endOfGameCallback(this.noTakerGameResult())
             }
         })
@@ -80,6 +81,13 @@ export class TarotGame {
             numberOfPointsForTaker: undefined,
             endOfGameDeck: this.table.gatherDeck()
         }
+    }
+
+
+    private endGame(): void {
+        const endedGameResult: GameResultWithDeck = this.endedGameResult();
+        this.players.forEach((playerToNotify) => TarotGame.notifyGameIsOver(playerToNotify, endedGameResult.numberOfPointsForTaker))
+        this.endOfGameCallback(endedGameResult)
     }
 
     private endedGameResult(): GameResultWithDeck {
@@ -112,9 +120,10 @@ export class TarotGame {
         })
     }
 
-    private static notifyGameIsOver(playerToNotify: TarotPlayer): void {
+    private static notifyGameIsOver(playerToNotify: TarotPlayer, numberOfPointsForTaker?: number): void {
         playerToNotify.notify({
-            type: "GAME_IS_OVER"
+            type: "GAME_IS_OVER",
+            numberOfPointsForTaker: numberOfPointsForTaker
         })
     }
 

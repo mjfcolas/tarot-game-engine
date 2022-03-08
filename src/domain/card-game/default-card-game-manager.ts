@@ -3,7 +3,7 @@ import {Observable, ReplaySubject, Subject} from "rxjs";
 import {PlayedCard, ResolveTurn, TurnResult} from "./functions/resolve-turn";
 import {GetPlayableCards} from "./functions/playable-cards";
 import {PlayableTable} from "./ports/playable-table";
-import {CardGamePlayer} from "./player/card-game-player";
+import {CardGamePlayer, PlayerIdentifier} from "./player/card-game-player";
 import {PlayingCard} from "tarot-card-deck";
 
 export class DefaultCardGameManager implements CardGameManager {
@@ -70,9 +70,10 @@ class OneTurnManager {
     ) {
     }
 
-    private static askToPlay(player: CardGamePlayer) {
+    private static askToPlay(player: CardGamePlayer, playableCards: readonly PlayingCard[]) {
         player.notify({
-            type: "ASKED_TO_PLAY"
+            type: "ASKED_TO_PLAY",
+            playableCards: playableCards
         })
     }
 
@@ -99,7 +100,8 @@ class OneTurnManager {
 
     beginTurn(playerThatBegin: CardGamePlayer): void {
         this.currentPlayer = playerThatBegin
-        OneTurnManager.askToPlay(this.currentPlayer)
+        const playableCards = this.getPlayableCardsForPlayer(playerThatBegin.id);
+        OneTurnManager.askToPlay(this.currentPlayer, playableCards)
     }
 
     play(playerThatPlay: CardGamePlayer, card: PlayingCard) {
@@ -124,13 +126,18 @@ class OneTurnManager {
             this.turnResult.next(turnResult);
         } else {
             const nextPlayer = this.players[nextPlayerIndex];
+            const playableCards = this.getPlayableCardsForPlayer(nextPlayer.id);
             this.currentPlayer = nextPlayer;
-            OneTurnManager.askToPlay(nextPlayer);
+            OneTurnManager.askToPlay(nextPlayer, playableCards);
         }
     }
 
     turnIsComplete(): Observable<TurnResult> {
         this.currentPlayer = undefined;
         return this.turnResult
+    }
+
+    private getPlayableCardsForPlayer(playerIdentifier: PlayerIdentifier): readonly PlayingCard[] {
+        return this.getPlayableCards(this.playedCards.map((currentPlayedCard) => currentPlayedCard.playingCard), this.table.listCardsOf(playerIdentifier))
     }
 }
