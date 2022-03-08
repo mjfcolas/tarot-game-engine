@@ -63,6 +63,7 @@ export class DefaultAnnounceManager implements AnnounceManager {
 
         const nextPlayerIndex = this.players.findIndex(playerToTry => playerThatAnnounce.id === playerToTry.id) + 1;
         if (nextPlayerIndex === this.players.length) {
+            this.currentPlayer = undefined;
             this.taker.next(this.potentialTakerAnnounce)
             this.taker.complete()
         } else {

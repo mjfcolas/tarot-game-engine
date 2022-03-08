@@ -21,16 +21,16 @@ describe(`Default card game manager`, () => {
     const mockedGetPlayableCards = jest.fn()
     mockedGetPlayableCards.mockReturnValue([aPlayingCard])
 
-    let players: DummyCardGamePlayer[] =
-        beforeEach(() => {
-            players = [
-                new DummyCardGamePlayer("1"),
-                new DummyCardGamePlayer("2"),
-                new DummyCardGamePlayer("3"),
-                new DummyCardGamePlayer("4")
-            ]
+    let players: DummyCardGamePlayer[];
+    beforeEach(() => {
+        players = [
+            new DummyCardGamePlayer("1"),
+            new DummyCardGamePlayer("2"),
+            new DummyCardGamePlayer("3"),
+            new DummyCardGamePlayer("4")
+        ]
 
-        })
+    })
 
     const getTurnResultForPlayer = (player: DummyCardGamePlayer) => ({
         winner: player.id,
@@ -57,11 +57,13 @@ describe(`Default card game manager`, () => {
 
     test(`Given a card game manager, 
     when game begin, 
-    then first player is asked to play`, () => {
+    then first player is asked to play and playable cards are known`, () => {
         const cardGameManager: DefaultCardGameManager = new DefaultCardGameManager(mockedResolveTurn, mockedGetPlayableCards, mockedTarotTable, players);
         cardGameManager.begin();
         expect(players[0].askedToPlay).toHaveBeenCalled()
+        expect(players[0].playableCards).toEqual([aPlayingCard])
     });
+
 
     test(`Given a game that has just begun,
         when second player tries to play,
@@ -86,11 +88,12 @@ describe(`Default card game manager`, () => {
 
     test(`Given a game that has just begun,
         when first player plays,
-        then then second player is asked to play`, () => {
+        then then second player is asked to play and playable cards are known`, () => {
         const cardGameManager: DefaultCardGameManager = new DefaultCardGameManager(mockedResolveTurn, mockedGetPlayableCards, mockedTarotTable, players);
         cardGameManager.begin();
         cardGameManager.play(players[0], aPlayingCard);
         expect(players[1].askedToPlay).toHaveBeenCalled()
+        expect(players[1].playableCards).toEqual([aPlayingCard])
     });
 
     test(`Given the three first players that have played,
@@ -114,6 +117,7 @@ describe(`Default card game manager`, () => {
         mockedResolveTurn.mockReturnValue(getTurnResultForPlayer(players[1]))
         playCompleteTurn(cardGameManager)
         expect(players[1].askedToPlay).toHaveBeenCalledTimes(2)
+        expect(players[1].playableCards).toEqual([aPlayingCard])
     });
 
     test(`Given all the three first players that have played,
@@ -124,7 +128,7 @@ describe(`Default card game manager`, () => {
         playCompleteTurn(cardGameManager)
 
         expect(players[2].askedToPlay).toHaveBeenCalled()
-
+        expect(players[2].playableCards).toEqual([aPlayingCard])
     });
 
     test(`Given the second player that just won last turn,
@@ -135,6 +139,7 @@ describe(`Default card game manager`, () => {
         playCompleteTurn(cardGameManager)
         cardGameManager.play(players[1], aPlayingCard)
         expect(players[2].askedToPlay).toHaveBeenCalled()
+        expect(players[2].playableCards).toEqual([aPlayingCard])
     });
 
     test(`Given the second player that just won last turn,
@@ -157,6 +162,7 @@ describe(`Default card game manager`, () => {
         mockedResolveTurn.mockReturnValue(getTurnResultForPlayer(players[3]))
         cardGameManager.play(players[3], aPlayingCard)
         expect(players[0].askedToPlay).toHaveBeenCalled()
+        expect(players[0].playableCards).toEqual([aPlayingCard])
     });
 
     test(`Given the third player that has just won last turn,

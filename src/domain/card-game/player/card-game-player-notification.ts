@@ -6,6 +6,7 @@ export type CardGamePlayerNotification = {
     cards: PlayingCard[]
 } | {
     type: "ASKED_TO_PLAY"
+    playableCards: readonly PlayingCard[]
 } | {
     type: "ERROR_WHILE_PLAYING"
 } | {

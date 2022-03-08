@@ -9,6 +9,7 @@ export class DummyCardGamePlayer implements CardGamePlayer {
     turnResultIsKnown = jest.fn()
     availableCardsAreKnown = jest.fn()
     public availableCards: PlayingCard[] = []
+    public playableCards: readonly PlayingCard[] = []
 
     constructor(public readonly id: string) {
     }
@@ -20,6 +21,7 @@ export class DummyCardGamePlayer implements CardGamePlayer {
         }
         if (playerNotification.type === "ASKED_TO_PLAY") {
             this.askedToPlay();
+            this.playableCards = playerNotification.playableCards
         }
         if (playerNotification.type === "ERROR_WHILE_PLAYING") {
             this.playError();

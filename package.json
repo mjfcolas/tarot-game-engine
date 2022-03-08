@@ -1,6 +1,6 @@
 {
   "name": "tarot-game-engine",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "A tarot card game Engine",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -21,7 +21,7 @@
   "dependencies": {
     "play-with-deck": "^1.0.1",
     "rxjs": "^7.5.2",
-    "tarot-card-deck": "^1.0.1"
+    "tarot-card-deck": "^1.0.3"
   },
   "devDependencies": {
     "@babel/preset-env": "^7.16.8",
