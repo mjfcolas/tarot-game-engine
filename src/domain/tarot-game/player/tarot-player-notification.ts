@@ -1,6 +1,7 @@
 import {Announce} from "../announce/announce";
 import {TarotPlayer} from "./tarot-player";
 import {CardGamePlayerNotification} from "../../card-game/player/card-game-player-notification";
+import {PlayerIdentifier} from "../../card-game/player/card-game-player";
 
 export type TarotPlayerNotification = CardGamePlayerNotification | {
     type: "ASKED_FOR_ANNOUNCE"
@@ -9,11 +10,11 @@ export type TarotPlayerNotification = CardGamePlayerNotification | {
     type: "ERROR_WHILE_ANNOUNCING"
 } | {
     type: "PLAYER_HAS_ANNOUNCED",
-    player: TarotPlayer,
+    player: PlayerIdentifier,
     announce?: Announce
 } | {
     type: "TAKER_IS_KNOWN",
-    player: TarotPlayer,
+    player: PlayerIdentifier,
     announce?: Announce
 } | {
     type: "GAME_IS_OVER",
