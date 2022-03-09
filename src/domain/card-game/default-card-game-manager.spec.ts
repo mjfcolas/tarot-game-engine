@@ -80,10 +80,10 @@ describe(`Default card game manager`, () => {
         const cardGameManager: DefaultCardGameManager = new DefaultCardGameManager(mockedResolveTurn, mockedGetPlayableCards, mockedTarotTable, players);
         cardGameManager.begin();
         cardGameManager.play(players[0], aPlayingCard);
-        expect(players[0].playedCardIsKnown).toHaveBeenCalledWith(aPlayingCard, players[0])
-        expect(players[1].playedCardIsKnown).toHaveBeenCalledWith(aPlayingCard, players[0])
-        expect(players[2].playedCardIsKnown).toHaveBeenCalledWith(aPlayingCard, players[0])
-        expect(players[3].playedCardIsKnown).toHaveBeenCalledWith(aPlayingCard, players[0])
+        expect(players[0].playedCardIsKnown).toHaveBeenCalledWith(aPlayingCard, players[0].id)
+        expect(players[1].playedCardIsKnown).toHaveBeenCalledWith(aPlayingCard, players[0].id)
+        expect(players[2].playedCardIsKnown).toHaveBeenCalledWith(aPlayingCard, players[0].id)
+        expect(players[3].playedCardIsKnown).toHaveBeenCalledWith(aPlayingCard, players[0].id)
     });
 
     test(`Given a game that has just begun,
@@ -104,10 +104,10 @@ describe(`Default card game manager`, () => {
 
         playCompleteTurn(cardGameManager)
 
-        expect(players[0].turnResultIsKnown).toHaveBeenCalledWith(players[0])
-        expect(players[1].turnResultIsKnown).toHaveBeenCalledWith(players[0])
-        expect(players[2].turnResultIsKnown).toHaveBeenCalledWith(players[0])
-        expect(players[3].turnResultIsKnown).toHaveBeenCalledWith(players[0])
+        expect(players[0].turnResultIsKnown).toHaveBeenCalledWith(players[0].id)
+        expect(players[1].turnResultIsKnown).toHaveBeenCalledWith(players[0].id)
+        expect(players[2].turnResultIsKnown).toHaveBeenCalledWith(players[0].id)
+        expect(players[3].turnResultIsKnown).toHaveBeenCalledWith(players[0].id)
     });
 
     test(`Given an ended turn,
@@ -178,10 +178,10 @@ describe(`Default card game manager`, () => {
         cardGameManager.play(players[0], aPlayingCard);
         cardGameManager.play(players[1], aPlayingCard);
 
-        expect(players[0].turnResultIsKnown).toHaveBeenCalledWith(players[1])
-        expect(players[1].turnResultIsKnown).toHaveBeenCalledWith(players[1])
-        expect(players[2].turnResultIsKnown).toHaveBeenCalledWith(players[1])
-        expect(players[3].turnResultIsKnown).toHaveBeenCalledWith(players[1])
+        expect(players[0].turnResultIsKnown).toHaveBeenCalledWith(players[1].id)
+        expect(players[1].turnResultIsKnown).toHaveBeenCalledWith(players[1].id)
+        expect(players[2].turnResultIsKnown).toHaveBeenCalledWith(players[1].id)
+        expect(players[3].turnResultIsKnown).toHaveBeenCalledWith(players[1].id)
     });
 
     test(`Given a turn that has begun,

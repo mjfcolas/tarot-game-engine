@@ -52,10 +52,10 @@ describe(`Tarot Game`, () => {
         }));
         new TarotGame(players, table, dealer, announceManager, cardGameManager, mockedGetIncorrectCardsSetAside, mockedCountEndOfGameScore, dummyEndOfGameCallback);
 
-        expect(players[0].takerIsKnown).toHaveBeenCalledWith(players[1], Announce.PRISE)
-        expect(players[1].takerIsKnown).toHaveBeenCalledWith(players[1], Announce.PRISE)
-        expect(players[2].takerIsKnown).toHaveBeenCalledWith(players[1], Announce.PRISE)
-        expect(players[3].takerIsKnown).toHaveBeenCalledWith(players[1], Announce.PRISE)
+        expect(players[0].takerIsKnown).toHaveBeenCalledWith(players[1].id, Announce.PRISE)
+        expect(players[1].takerIsKnown).toHaveBeenCalledWith(players[1].id, Announce.PRISE)
+        expect(players[2].takerIsKnown).toHaveBeenCalledWith(players[1].id, Announce.PRISE)
+        expect(players[3].takerIsKnown).toHaveBeenCalledWith(players[1].id, Announce.PRISE)
     })
 
     test(`Given an initialized game, 
