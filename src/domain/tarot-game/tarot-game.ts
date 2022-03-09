@@ -103,7 +103,7 @@ export class TarotGame {
     private static notifyTakerIsKnown(playerToNotify: TarotPlayer, playerThatHaveAnnounced: TarotPlayer, announce?: Announce): void {
         playerToNotify.notify({
             type: "TAKER_IS_KNOWN",
-            player: playerThatHaveAnnounced,
+            player: playerThatHaveAnnounced.id,
             announce: announce
         })
     }

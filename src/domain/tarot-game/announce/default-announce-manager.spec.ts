@@ -91,10 +91,10 @@ describe(`Default announce manager`, () => {
         announceManager.beginAnnounces();
         announceManager.announce(players[0], Announce.PRISE)
 
-        expect(players[0].announceDone).toHaveBeenCalledWith(players[0], Announce.PRISE);
-        expect(players[1].announceDone).toHaveBeenCalledWith(players[0], Announce.PRISE);
-        expect(players[2].announceDone).toHaveBeenCalledWith(players[0], Announce.PRISE);
-        expect(players[3].announceDone).toHaveBeenCalledWith(players[0], Announce.PRISE);
+        expect(players[0].announceDone).toHaveBeenCalledWith(players[0].id, Announce.PRISE);
+        expect(players[1].announceDone).toHaveBeenCalledWith(players[0].id, Announce.PRISE);
+        expect(players[2].announceDone).toHaveBeenCalledWith(players[0].id, Announce.PRISE);
+        expect(players[3].announceDone).toHaveBeenCalledWith(players[0].id, Announce.PRISE);
     })
 
     test(`Given an announce manager and announces that has begun, 
