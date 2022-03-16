@@ -21,7 +21,7 @@ export class DefaultCardGameManager implements CardGameManager {
     private static notifyEndOfTurn(playerToNotify: CardGamePlayer, turnWinner: CardGamePlayer) {
         playerToNotify.notify({
             type: "TURN_RESULT_IS_KNOWN",
-            turnWinner: turnWinner
+            turnWinner: turnWinner.id
         })
     }
 
@@ -86,7 +86,7 @@ class OneTurnManager {
     private static notifyPlayerHasPlayed(playerToNotify: CardGamePlayer, playerThatPlayed: CardGamePlayer, playedCard: PlayingCard) {
         playerToNotify.notify({
             type: "PLAYER_HAS_PLAYED",
-            player: playerThatPlayed,
+            player: playerThatPlayed.id,
             card: playedCard
         })
     }

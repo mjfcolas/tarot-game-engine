@@ -1,4 +1,4 @@
-import {CardGamePlayer} from "./card-game-player";
+import {PlayerIdentifier} from "./card-game-player";
 import {PlayingCard} from "tarot-card-deck";
 
 export type CardGamePlayerNotification = {
@@ -11,9 +11,9 @@ export type CardGamePlayerNotification = {
     type: "ERROR_WHILE_PLAYING"
 } | {
     type: "PLAYER_HAS_PLAYED",
-    player: CardGamePlayer
+    player: PlayerIdentifier
     card: PlayingCard
 } | {
     type: "TURN_RESULT_IS_KNOWN",
-    turnWinner: CardGamePlayer
+    turnWinner: PlayerIdentifier
 }

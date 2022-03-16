@@ -33,7 +33,7 @@ export class DefaultAnnounceManager implements AnnounceManager {
     private static notifyPlayerHasAnnounced(playerToNotify: TarotPlayer, playerThatHaveAnnounced: TarotPlayer, announce?: Announce): void {
         playerToNotify.notify({
             type: "PLAYER_HAS_ANNOUNCED",
-            player: playerThatHaveAnnounced,
+            player: playerThatHaveAnnounced.id,
             announce: announce
         })
     }
