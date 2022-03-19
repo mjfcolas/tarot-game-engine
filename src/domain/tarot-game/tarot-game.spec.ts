@@ -29,13 +29,14 @@ describe(`Tarot Game`, () => {
     const dealer: MockedTarotDealer = new MockedTarotDealer();
     const cardGameManager: MockedCardGameManager = new MockedCardGameManager();
     const mockedGetIncorrectCardsSetAside = jest.fn();
+    const mockedGetPossibleCardsToSetAside = jest.fn()
     const mockedCountEndOfGameScore = jest.fn();
 
     test(`Given players, a table, and an announce manager
     when initializing a game, 
     then initialization is done`, () => {
         announceManager.announcesAreComplete.mockReturnValue(of(undefined));
-        new TarotGame(players, table, dealer, announceManager, cardGameManager, mockedGetIncorrectCardsSetAside, mockedCountEndOfGameScore, dummyEndOfGameCallback);
+        new TarotGame(players, table, dealer, announceManager, cardGameManager, mockedGetIncorrectCardsSetAside, mockedGetPossibleCardsToSetAside, mockedCountEndOfGameScore, dummyEndOfGameCallback);
 
         expect(table.shuffle).toHaveBeenCalled();
         expect(table.cut).toHaveBeenCalled();
@@ -50,7 +51,7 @@ describe(`Tarot Game`, () => {
             taker: players[1],
             announce: Announce.PRISE
         }));
-        new TarotGame(players, table, dealer, announceManager, cardGameManager, mockedGetIncorrectCardsSetAside, mockedCountEndOfGameScore, dummyEndOfGameCallback);
+        new TarotGame(players, table, dealer, announceManager, cardGameManager, mockedGetIncorrectCardsSetAside, mockedGetPossibleCardsToSetAside, mockedCountEndOfGameScore, dummyEndOfGameCallback);
 
         expect(players[0].takerIsKnown).toHaveBeenCalledWith(players[1].id, Announce.PRISE)
         expect(players[1].takerIsKnown).toHaveBeenCalledWith(players[1].id, Announce.PRISE)
@@ -60,14 +61,14 @@ describe(`Tarot Game`, () => {
 
     test(`Given an initialized game, 
     when announces are over and nobody has announces something,
-    then game over is emitted to all players and end of game callback is called with game results`, () => {
+    then game aborted is emitted to all players and end of game callback is called with game results`, () => {
         announceManager.announcesAreComplete.mockReturnValue(of(undefined));
-        new TarotGame(players, table, dealer, announceManager, cardGameManager, mockedGetIncorrectCardsSetAside, mockedCountEndOfGameScore, dummyEndOfGameCallback);
+        new TarotGame(players, table, dealer, announceManager, cardGameManager, mockedGetIncorrectCardsSetAside, mockedGetPossibleCardsToSetAside, mockedCountEndOfGameScore, dummyEndOfGameCallback);
 
-        expect(players[0].gameOver).toHaveBeenCalled();
-        expect(players[1].gameOver).toHaveBeenCalled();
-        expect(players[2].gameOver).toHaveBeenCalled();
-        expect(players[3].gameOver).toHaveBeenCalled();
+        expect(players[0].gameAborted).toHaveBeenCalled();
+        expect(players[1].gameAborted).toHaveBeenCalled();
+        expect(players[2].gameAborted).toHaveBeenCalled();
+        expect(players[3].gameAborted).toHaveBeenCalled();
         expect(dummyEndOfGameCallback).toHaveBeenCalled();
     })
 
@@ -78,7 +79,7 @@ describe(`Tarot Game`, () => {
             taker: players[1],
             announce: Announce.PRISE
         }));
-        new TarotGame(players, table, dealer, announceManager, cardGameManager, mockedGetIncorrectCardsSetAside, mockedCountEndOfGameScore, dummyEndOfGameCallback);
+        new TarotGame(players, table, dealer, announceManager, cardGameManager, mockedGetIncorrectCardsSetAside, mockedGetPossibleCardsToSetAside, mockedCountEndOfGameScore, dummyEndOfGameCallback);
 
         expect(table.giveDogToPlayer).toHaveBeenCalledWith(players[1].id)
         expect(players[1].availableCardsAreKnown).toHaveBeenCalled()
@@ -87,14 +88,16 @@ describe(`Tarot Game`, () => {
 
     test(`Given an initialized game,
     when taker is determined,
-    then taker is notify that he has to set aside cards`, () => {
+    then taker is notify that he has to set aside cards and available cards to set aside are provided`, () => {
         announceManager.announcesAreComplete.mockReturnValue(of({
             taker: players[1],
             announce: Announce.PRISE
         }));
-        new TarotGame(players, table, dealer, announceManager, cardGameManager, mockedGetIncorrectCardsSetAside, mockedCountEndOfGameScore, dummyEndOfGameCallback);
+        const availableCardsToSetAside = [DECK_78[0], DECK_78[1]];
+        mockedGetPossibleCardsToSetAside.mockReturnValue(availableCardsToSetAside)
+        new TarotGame(players, table, dealer, announceManager, cardGameManager, mockedGetIncorrectCardsSetAside, mockedGetPossibleCardsToSetAside, mockedCountEndOfGameScore, dummyEndOfGameCallback);
 
-        expect(players[1].hasToSetAside).toHaveBeenCalled()
+        expect(players[1].hasToSetAside).toHaveBeenCalledWith(availableCardsToSetAside)
     })
 
     test(`Given a determined taker,
@@ -107,7 +110,7 @@ describe(`Tarot Game`, () => {
         mockedGetIncorrectCardsSetAside.mockReturnValue([])
         cardGameManager.gameIsOver.mockReturnValue(new ReplaySubject(1))
         table.listCardsOf.mockReturnValue([])
-        const tarotGame = new TarotGame(players, table, dealer, announceManager, cardGameManager, mockedGetIncorrectCardsSetAside, mockedCountEndOfGameScore, dummyEndOfGameCallback);
+        const tarotGame = new TarotGame(players, table, dealer, announceManager, cardGameManager, mockedGetIncorrectCardsSetAside, mockedGetPossibleCardsToSetAside, mockedCountEndOfGameScore, dummyEndOfGameCallback);
         tarotGame.setAside(players[1], DECK_78.slice(0, 6));
         expect(players[1].availableCardsAreKnown).toHaveBeenCalledTimes(2)
         expect(cardGameManager.begin).toHaveBeenCalled()
@@ -120,7 +123,7 @@ describe(`Tarot Game`, () => {
             taker: players[1],
             announce: Announce.PRISE
         }));
-        const tarotGame = new TarotGame(players, table, dealer, announceManager, cardGameManager, mockedGetIncorrectCardsSetAside, mockedCountEndOfGameScore, dummyEndOfGameCallback);
+        const tarotGame = new TarotGame(players, table, dealer, announceManager, cardGameManager, mockedGetIncorrectCardsSetAside, mockedGetPossibleCardsToSetAside, mockedCountEndOfGameScore, dummyEndOfGameCallback);
         tarotGame.setAside(players[1], DECK_78.slice(10, 14));
         expect(players[1].setAsideError).toHaveBeenCalled()
     })
@@ -133,7 +136,7 @@ describe(`Tarot Game`, () => {
             announce: Announce.PRISE
         }));
         mockedGetIncorrectCardsSetAside.mockReturnValue(DECK_78.slice(10, 13))
-        const tarotGame = new TarotGame(players, table, dealer, announceManager, cardGameManager, mockedGetIncorrectCardsSetAside, mockedCountEndOfGameScore, dummyEndOfGameCallback);
+        const tarotGame = new TarotGame(players, table, dealer, announceManager, cardGameManager, mockedGetIncorrectCardsSetAside, mockedGetPossibleCardsToSetAside, mockedCountEndOfGameScore, dummyEndOfGameCallback);
 
         tarotGame.setAside(players[1], DECK_78.slice(10, 16));
         expect(players[1].setAsideError).toHaveBeenCalled()
@@ -142,7 +145,7 @@ describe(`Tarot Game`, () => {
     test(`Given no determined taker,
     when a player try to set cards aside,
     then the player is notified that he cannot perform this action`, () => {
-        const tarotGame = new TarotGame(players, table, dealer, announceManager, cardGameManager, mockedGetIncorrectCardsSetAside, mockedCountEndOfGameScore, dummyEndOfGameCallback);
+        const tarotGame = new TarotGame(players, table, dealer, announceManager, cardGameManager, mockedGetIncorrectCardsSetAside, mockedGetPossibleCardsToSetAside, mockedCountEndOfGameScore, dummyEndOfGameCallback);
         tarotGame.setAside(players[0], []);
         expect(players[0].setAsideError).toHaveBeenCalled()
     })
@@ -157,7 +160,7 @@ describe(`Tarot Game`, () => {
         mockedGetIncorrectCardsSetAside.mockReturnValue([])
         cardGameManager.gameIsOver.mockReturnValue(new ReplaySubject(1))
         table.listCardsOf.mockReturnValue([])
-        const tarotGame = new TarotGame(players, table, dealer, announceManager, cardGameManager, mockedGetIncorrectCardsSetAside, mockedCountEndOfGameScore, dummyEndOfGameCallback);
+        const tarotGame = new TarotGame(players, table, dealer, announceManager, cardGameManager, mockedGetIncorrectCardsSetAside, mockedGetPossibleCardsToSetAside, mockedCountEndOfGameScore, dummyEndOfGameCallback);
         tarotGame.setAside(players[1], DECK_78.slice(0, 6));
         tarotGame.setAside(players[1], DECK_78.slice(0, 6));
         expect(players[1].setAsideError).toHaveBeenCalled()
@@ -170,7 +173,7 @@ describe(`Tarot Game`, () => {
             taker: players[1],
             announce: Announce.PRISE
         }));
-        const tarotGame = new TarotGame(players, table, dealer, announceManager, cardGameManager, mockedGetIncorrectCardsSetAside, mockedCountEndOfGameScore, dummyEndOfGameCallback);
+        const tarotGame = new TarotGame(players, table, dealer, announceManager, cardGameManager, mockedGetIncorrectCardsSetAside, mockedGetPossibleCardsToSetAside, mockedCountEndOfGameScore, dummyEndOfGameCallback);
         tarotGame.setAside(players[0], []);
         expect(players[0].setAsideError).toHaveBeenCalled()
     })
@@ -189,15 +192,17 @@ describe(`Tarot Game`, () => {
         cardGameManager.gameIsOver.mockReturnValue(endOfGameSubject)
 
         table.listCardsOf.mockReturnValue([])
-        const tarotGame = new TarotGame(players, table, dealer, announceManager, cardGameManager, mockedGetIncorrectCardsSetAside, mockedCountEndOfGameScore, dummyEndOfGameCallback);
+        const tarotGame = new TarotGame(players, table, dealer, announceManager, cardGameManager, mockedGetIncorrectCardsSetAside, mockedGetPossibleCardsToSetAside, mockedCountEndOfGameScore, dummyEndOfGameCallback);
         tarotGame.setAside(players[1], DECK_78.slice(0, 6));
 
         const takerEndOfGameScore = 5;
+        const defenseEndOfGameScore = 86;
 
         mockedCountEndOfGameScore.mockReturnValue(takerEndOfGameScore)
         endOfGameSubject.subscribe(_ => {
             expect(dummyEndOfGameCallback).toHaveBeenCalledWith({
-                numberOfPointsForTaker: takerEndOfGameScore,
+                numberOfPointsForAttack: takerEndOfGameScore,
+                numberOfPointsForDefense: defenseEndOfGameScore,
                 endOfGameDeck: undefined
             });
             expect(players[0].gameOver).toHaveBeenCalledWith(takerEndOfGameScore);

@@ -131,7 +131,7 @@ describe('Simulate a complete game', function () {
             players,
             (gameResult: GameResultWithDeck) => {
                 console.log(gameResult)
-                expect(gameResult.numberOfPointsForTaker).toEqual(50)
+                expect(gameResult.numberOfPointsForAttack).toEqual(50)
                 done()
             },
             predictableDealFunction
