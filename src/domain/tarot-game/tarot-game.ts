@@ -5,12 +5,13 @@ import {CardGameManager} from "../card-game/card-game-manager";
 import {TarotTable} from "./table/ports/tarot-table";
 import {TarotDealer} from "./dealer/tarot-dealer";
 import {PlayingCard} from "tarot-card-deck";
-import {GetIncorrectCardsSetAside} from "./functions/tarot-available-cards-to-set-aside";
+import {GetIncorrectCardsSetAside, GetPossibleCardsToSetAside} from "./functions/tarot-available-cards-to-set-aside";
 import {CountEndGameScore} from "./functions/count-tarot-end-game-score";
 import {isExcuse} from "./cards/card-types";
 
 export type GameResultWithDeck = {
-    numberOfPointsForTaker: number
+    numberOfPointsForAttack: number
+    numberOfPointsForDefense: number
     endOfGameDeck: readonly PlayingCard[]
 }
 
@@ -28,6 +29,7 @@ export class TarotGame {
         private readonly announceManager: AnnounceManager,
         private readonly cardGameManager: CardGameManager,
         private readonly verifyCardsSetAside: GetIncorrectCardsSetAside,
+        private readonly getPossibleCardsToSetAside: GetPossibleCardsToSetAside,
         private readonly countEndGameScore: CountEndGameScore,
         private readonly endOfGameCallback: (gameResult: GameResultWithDeck) => void) {
         this.table.shuffle();
@@ -67,9 +69,9 @@ export class TarotGame {
                 this.players.forEach((playerToNotify) => TarotGame.notifyTakerIsKnown(playerToNotify, takerAnnounce.taker, takerAnnounce.announce))
                 this.table.giveDogToPlayer(this.taker.id)
                 TarotGame.notifyCardsAvailable(this.taker, this.table.listCardsOf(this.taker.id))
-                TarotGame.notifyPlayerHasToSetAside(this.taker)
+                TarotGame.notifyPlayerHasToSetAside(this.taker, this.getPossibleCardsToSetAside(this.table.listCardsOf(this.taker.id), this.numberOfCardsInDog))
             } else {
-                this.players.forEach((playerToNotify) => TarotGame.notifyGameIsOver(playerToNotify, null))
+                this.players.forEach((playerToNotify) => TarotGame.notifyGameAborted(playerToNotify))
                 this.endOfGameCallback(this.noTakerGameResult())
             }
         })
@@ -78,7 +80,8 @@ export class TarotGame {
 
     private noTakerGameResult(): GameResultWithDeck {
         return {
-            numberOfPointsForTaker: undefined,
+            numberOfPointsForAttack: undefined,
+            numberOfPointsForDefense: undefined,
             endOfGameDeck: this.table.gatherDeck()
         }
     }
@@ -86,7 +89,10 @@ export class TarotGame {
 
     private endGame(): void {
         const endedGameResult: GameResultWithDeck = this.endedGameResult();
-        this.players.forEach((playerToNotify) => TarotGame.notifyGameIsOver(playerToNotify, endedGameResult.numberOfPointsForTaker))
+        this.players.forEach((playerToNotify) => TarotGame.notifyGameIsOver(
+            playerToNotify,
+            endedGameResult.numberOfPointsForAttack,
+            endedGameResult.numberOfPointsForDefense))
         this.endOfGameCallback(endedGameResult)
     }
 
@@ -94,8 +100,10 @@ export class TarotGame {
         const endGameScoreForTaker: number = this.countEndGameScore(
             this.table.listPointsFor(this.taker.id),
             this.takerHasExcuseAtStartOfGame);
+        const totalNumberOfPointsInGame = 91;
         return {
-            numberOfPointsForTaker: endGameScoreForTaker,
+            numberOfPointsForAttack: endGameScoreForTaker,
+            numberOfPointsForDefense: totalNumberOfPointsInGame - endGameScoreForTaker,
             endOfGameDeck: this.table.gatherDeck()
         }
     }
@@ -108,9 +116,10 @@ export class TarotGame {
         })
     }
 
-    private static notifyPlayerHasToSetAside(playerToNotify: TarotPlayer): void {
+    private static notifyPlayerHasToSetAside(playerToNotify: TarotPlayer, availableCardsToSetAside: PlayingCard[]): void {
         playerToNotify.notify({
-            type: "ASKED_FOR_SET_ASIDE"
+            type: "ASKED_FOR_SET_ASIDE",
+            possibleCardsToSetAside: availableCardsToSetAside
         })
     }
 
@@ -120,10 +129,17 @@ export class TarotGame {
         })
     }
 
-    private static notifyGameIsOver(playerToNotify: TarotPlayer, numberOfPointsForTaker?: number): void {
+    private static notifyGameIsOver(playerToNotify: TarotPlayer, numberOfPointsForAttack: number, numberOfPointsForDefense: number): void {
         playerToNotify.notify({
             type: "GAME_IS_OVER",
-            numberOfPointsForTaker: numberOfPointsForTaker
+            numberOfPointsForAttack: numberOfPointsForAttack,
+            numberOfPointsForDefense: numberOfPointsForDefense
+        })
+    }
+
+    private static notifyGameAborted(playerToNotify: TarotPlayer): void {
+        playerToNotify.notify({
+            type: "GAME_IS_ABORTED",
         })
     }
 

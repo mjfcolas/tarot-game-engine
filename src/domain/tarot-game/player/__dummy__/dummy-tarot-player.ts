@@ -11,6 +11,7 @@ export class DummyTarotPlayer extends DummyCardGamePlayer implements TarotPlayer
     playError = jest.fn();
     takerIsKnown = jest.fn();
     gameOver = jest.fn();
+    gameAborted = jest.fn();
     askedToPlay = jest.fn();
     playedCardIsKnown = jest.fn();
     turnResultIsKnown = jest.fn()
@@ -38,10 +39,13 @@ export class DummyTarotPlayer extends DummyCardGamePlayer implements TarotPlayer
             this.takerIsKnown(playerNotification.player, playerNotification.announce)
         }
         if (playerNotification.type === "GAME_IS_OVER") {
-            this.gameOver(playerNotification.numberOfPointsForTaker)
+            this.gameOver(playerNotification.numberOfPointsForAttack)
+        }
+        if (playerNotification.type === "GAME_IS_ABORTED") {
+            this.gameAborted()
         }
         if(playerNotification.type === "ASKED_FOR_SET_ASIDE"){
-            this.hasToSetAside()
+            this.hasToSetAside(playerNotification.possibleCardsToSetAside)
         }
         if(playerNotification.type === "ERROR_WHILE_SETTING_ASIDE"){
             this.setAsideError();

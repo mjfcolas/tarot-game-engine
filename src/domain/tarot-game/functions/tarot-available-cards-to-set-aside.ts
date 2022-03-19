@@ -4,6 +4,7 @@ import {isKing, isOudler, isTrumpsButNotOudler} from "../cards/card-types";
 
 
 export type GetIncorrectCardsSetAside = (allAvailableCards: PlayingCard[], cardsSetAside: PlayingCard[]) => PlayingCard[]
+export type GetPossibleCardsToSetAside = (allAvailableCards: PlayingCard[], numberOfCardsToSetAside: number) => PlayingCard[]
 
 export function getIncorrectCardsSetAside(allAvailableCards: readonly PlayingCard[], cardsSetAside: readonly PlayingCard[]): PlayingCard[] {
     const numberOfCardsSetAside = cardsSetAside.length;
@@ -21,4 +22,24 @@ export function getIncorrectCardsSetAside(allAvailableCards: readonly PlayingCar
         .slice(numberOfTrumpsToSetAside);
 
     return [...oudlersAndKingSetAside, ...incorrectTrumpsSetAside];
+}
+
+export function getPossibleCardsToSetAside(allAvailableCards: readonly PlayingCard[], numberOfCardsToSetAside: number): PlayingCard[] {
+    const cardsThatAreNotTrumpsNorKingNorOudlers: PlayingCard[] = allAvailableCards.filter(currentCard =>
+        currentCard.type !== PlayingCardType.JOKER
+        && currentCard.type !== PlayingCardType.TRUMP
+        && (currentCard.type !== PlayingCardType.FACE
+            || currentCard.type === PlayingCardType.FACE && currentCard.face !== Face.K))
+
+    const trumpsThatAreNotOudlers: PlayingCard[] = allAvailableCards.filter(currentCard =>
+        currentCard.type === PlayingCardType.TRUMP
+        && currentCard.value !== 21 && currentCard.value !== 1);
+
+    const trumpsMightBeSetAside = numberOfCardsToSetAside > cardsThatAreNotTrumpsNorKingNorOudlers.length;
+
+    if (trumpsMightBeSetAside) {
+        return [...cardsThatAreNotTrumpsNorKingNorOudlers, ...trumpsThatAreNotOudlers]
+    } else {
+        return cardsThatAreNotTrumpsNorKingNorOudlers;
+    }
 }
