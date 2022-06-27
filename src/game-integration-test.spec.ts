@@ -43,7 +43,7 @@ import {
     HEART_J,
     HEART_K,
     HEART_Q,
-    JOKER,
+    EXCUSE,
     SPADE_1,
     SPADE_10,
     SPADE_2,
@@ -105,7 +105,7 @@ describe('Simulate a complete game', function () {
         ]
 
         const dog: PlayingCard[] = [
-            TRUMP_17, TRUMP_18, TRUMP_19, TRUMP_20, TRUMP_21, JOKER
+            TRUMP_17, TRUMP_18, TRUMP_19, TRUMP_20, TRUMP_21, EXCUSE
         ]
 
         return {
@@ -199,7 +199,7 @@ describe('Simulate a complete game', function () {
         tarotGame.play(players[1], CLUB_8)
         tarotGame.play(players[2], TRUMP_15)
 
-        tarotGame.play(players[2], JOKER)
+        tarotGame.play(players[2], EXCUSE)
         tarotGame.play(players[3], CLUB_6)
         tarotGame.play(players[0], CLUB_7)
         tarotGame.play(players[1], CLUB_C)

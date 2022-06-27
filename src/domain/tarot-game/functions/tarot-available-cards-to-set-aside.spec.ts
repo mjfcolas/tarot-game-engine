@@ -8,7 +8,7 @@ import {
     DIAMOND_1,
     DIAMOND_2,
     DIAMOND_3,
-    JOKER,
+    EXCUSE,
     TRUMP_1,
     TRUMP_2,
     TRUMP_3,
@@ -37,7 +37,7 @@ describe('Available Cards to set aside', function () {
             TRUMP_3,
             TRUMP_4,
             TRUMP_5,
-            JOKER
+            EXCUSE
         ]
 
         const setAsideCards: PlayingCard[] = [
@@ -68,7 +68,7 @@ describe('Available Cards to set aside', function () {
             TRUMP_3,
             TRUMP_4,
             TRUMP_5,
-            JOKER
+            EXCUSE
         ]
 
         const expectedPossibleCardsToSetAside: PlayingCard[] = [
@@ -101,18 +101,18 @@ describe('Available Cards to set aside', function () {
             TRUMP_3,
             TRUMP_4,
             TRUMP_5,
-            JOKER
+            EXCUSE
         ]
 
         const setAsideCards: PlayingCard[] = [
-            JOKER,
+            EXCUSE,
             CLUB_K,
             TRUMP_1,
             CLUB_1,
             CLUB_2,
             CLUB_3,
         ]
-        expect(getIncorrectCardsSetAside(playerGame, setAsideCards)).toEqual([JOKER,
+        expect(getIncorrectCardsSetAside(playerGame, setAsideCards)).toEqual([EXCUSE,
             CLUB_K,
             TRUMP_1]);
 
@@ -134,18 +134,18 @@ describe('Available Cards to set aside', function () {
             TRUMP_3,
             TRUMP_4,
             TRUMP_5,
-            JOKER
+            EXCUSE
         ]
 
         const setAsideCards: PlayingCard[] = [
-            JOKER,
+            EXCUSE,
             CLUB_K,
             TRUMP_2,
             CLUB_1,
             CLUB_2,
             CLUB_3,
         ]
-        expect(getIncorrectCardsSetAside(playerGame, setAsideCards)).toEqual([JOKER, CLUB_K]);
+        expect(getIncorrectCardsSetAside(playerGame, setAsideCards)).toEqual([EXCUSE, CLUB_K]);
     })
 
     test(`Given a game with 5 cards that are not either oudlers nor trump nor king,
@@ -163,7 +163,7 @@ describe('Available Cards to set aside', function () {
             TRUMP_3,
             TRUMP_4,
             TRUMP_5,
-            JOKER
+            EXCUSE
         ]
 
         const expectedPossibleCardsToSetAside: PlayingCard[] = [
@@ -194,7 +194,7 @@ describe('Available Cards to set aside', function () {
             TRUMP_3,
             TRUMP_4,
             TRUMP_5,
-            JOKER
+            EXCUSE
         ]
 
         const setAsideCards: PlayingCard[] = [
@@ -222,7 +222,7 @@ describe('Available Cards to set aside', function () {
             TRUMP_3,
             TRUMP_4,
             TRUMP_5,
-            JOKER
+            EXCUSE
         ]
 
         const setAsideCards: PlayingCard[] = [
