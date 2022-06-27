@@ -1,5 +1,5 @@
 import {PlayingCard} from "tarot-card-deck";
-import {JOKER} from "tarot-card-deck/dist/cards/all-playing-cards";
+import {EXCUSE} from "tarot-card-deck/dist/cards/all-playing-cards";
 import {PlayingCardType} from "tarot-card-deck/dist/cards/playing-card";
 import {ClassicCard, isClassicCard, isTrumpCard, TrumpCard} from "../cards/card-types";
 
@@ -17,7 +17,7 @@ export function getPlayableTarotCards(alreadyPlayedCards: readonly PlayingCard[]
 function getMasterCard(alreadyPlayedCards: readonly PlayingCard[]) {
     let masterCard: PlayingCard;
     for (let potentialMasterCard of alreadyPlayedCards) {
-        if (!masterCard && potentialMasterCard !== JOKER) {
+        if (!masterCard && potentialMasterCard !== EXCUSE) {
             masterCard = potentialMasterCard;
         }
     }
@@ -50,7 +50,7 @@ function resolvePlayableCards(playerCards: readonly PlayingCard[], masterCard: P
         playableCards = [...playableCards, ...playerCards]
     } else {
         const excuseInPlayerCards: PlayingCard[] = playerCards
-            .filter(card => card.type === PlayingCardType.JOKER)
+            .filter(card => card.type === PlayingCardType.EXCUSE)
         playableCards = [...playableCards, ...excuseInPlayerCards]
     }
     return playableCards

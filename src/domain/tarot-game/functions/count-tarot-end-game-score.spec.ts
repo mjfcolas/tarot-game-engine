@@ -9,7 +9,7 @@ import {
     HEART_J,
     HEART_K,
     HEART_Q,
-    JOKER,
+    EXCUSE,
     TRUMP_1,
     TRUMP_21
 } from "tarot-card-deck/dist/cards/all-playing-cards";
@@ -68,14 +68,14 @@ describe('Count tarot end game score', function () {
     test(`Given taker that has won 3 small cards and the excuse and that did not have excuse at start of game,
         when counting his points,
         then returns expected number of points`, () => {
-        const wonCards: PlayingCard[] = [HEART_1, HEART_2, HEART_3, JOKER];
+        const wonCards: PlayingCard[] = [HEART_1, HEART_2, HEART_3, EXCUSE];
         expect(countTarotEndGameScore(wonCards, false)).toEqual(2)
     });
 
     test(`Given taker that has won 3 small cards and the excuse and that has excuse at start of game,
         when counting his points,
         then returns expected number of points`, () => {
-        const wonCards: PlayingCard[] = [HEART_1, HEART_2, HEART_3, JOKER];
+        const wonCards: PlayingCard[] = [HEART_1, HEART_2, HEART_3, EXCUSE];
         expect(countTarotEndGameScore(wonCards, true)).toEqual(6)
     });
 

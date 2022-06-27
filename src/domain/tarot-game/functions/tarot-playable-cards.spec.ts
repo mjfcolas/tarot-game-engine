@@ -5,7 +5,7 @@ import {
     HEART_3,
     HEART_4,
     HEART_5,
-    JOKER,
+    EXCUSE,
     SPADE_3,
     SPADE_4,
     TRUMP_1,
@@ -24,7 +24,7 @@ describe(`Get playable tarot cards`, () => {
         TRUMP_1, TRUMP_5, TRUMP_20, HEART_4, HEART_5
     ]
     const handWithHeartsAndExcuse: PlayingCard[] = [
-        TRUMP_1, JOKER, HEART_4, HEART_5
+        TRUMP_1, EXCUSE, HEART_4, HEART_5
     ]
     const handWithSpadesAndLowTrumps: PlayingCard[] = [
         SPADE_3, SPADE_4, TRUMP_1, TRUMP_2
@@ -42,9 +42,9 @@ describe(`Get playable tarot cards`, () => {
     const noCards: PlayingCard[] = [];
     const aHeart: PlayingCard[] = [HEART_3]
     const aHeartAndAMediumTrump: PlayingCard[] = [HEART_3, TRUMP_14]
-    const excuseAndHeart: PlayingCard[] = [JOKER, HEART_3]
+    const excuseAndHeart: PlayingCard[] = [EXCUSE, HEART_3]
     const trumpAndHeart: PlayingCard[] = [TRUMP_10, HEART_3]
-    const excuse: PlayingCard[] = [JOKER]
+    const excuse: PlayingCard[] = [EXCUSE]
 
     test(`Given no cards played has first card,
         when getting playable tarot cards,
@@ -62,7 +62,7 @@ describe(`Get playable tarot cards`, () => {
     test(`Given a heart played has first card and a player that has heart and excuse in his hand,
         when getting playable tarot cards,
         then return hearts and excuse`, () => {
-        const expectedPlayableCards: PlayingCard[] = [HEART_4, HEART_5, JOKER];
+        const expectedPlayableCards: PlayingCard[] = [HEART_4, HEART_5, EXCUSE];
         expect(getPlayableTarotCards(aHeart, handWithHeartsAndExcuse)).toEqual(expectedPlayableCards);
     });
 

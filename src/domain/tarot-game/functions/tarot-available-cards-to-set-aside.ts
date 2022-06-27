@@ -1,6 +1,7 @@
 import {PlayingCard} from "tarot-card-deck";
 import {Face, PlayingCardType} from "tarot-card-deck/dist/cards/playing-card";
 import {isKing, isOudler, isTrumpsButNotOudler} from "../cards/card-types";
+import {EXCUSE} from "tarot-card-deck/dist/cards/all-playing-cards";
 
 
 export type GetIncorrectCardsSetAside = (allAvailableCards: PlayingCard[], cardsSetAside: PlayingCard[]) => PlayingCard[]
@@ -9,7 +10,7 @@ export type GetPossibleCardsToSetAside = (allAvailableCards: PlayingCard[], numb
 export function getIncorrectCardsSetAside(allAvailableCards: readonly PlayingCard[], cardsSetAside: readonly PlayingCard[]): PlayingCard[] {
     const numberOfCardsSetAside = cardsSetAside.length;
     const numberOfCardsThatAreNotTrumpsNorKingNorOudlers = allAvailableCards.filter(currentCard =>
-        currentCard.type !== PlayingCardType.JOKER
+        currentCard.type !== PlayingCardType.EXCUSE
         && currentCard.type !== PlayingCardType.TRUMP
         && (currentCard.type !== PlayingCardType.FACE
             || currentCard.type === PlayingCardType.FACE && currentCard.face !== Face.K)).length
@@ -26,7 +27,7 @@ export function getIncorrectCardsSetAside(allAvailableCards: readonly PlayingCar
 
 export function getPossibleCardsToSetAside(allAvailableCards: readonly PlayingCard[], numberOfCardsToSetAside: number): PlayingCard[] {
     const cardsThatAreNotTrumpsNorKingNorOudlers: PlayingCard[] = allAvailableCards.filter(currentCard =>
-        currentCard.type !== PlayingCardType.JOKER
+        currentCard.type !== PlayingCardType.EXCUSE
         && currentCard.type !== PlayingCardType.TRUMP
         && (currentCard.type !== PlayingCardType.FACE
             || currentCard.type === PlayingCardType.FACE && currentCard.face !== Face.K))
