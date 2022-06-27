@@ -51,31 +51,61 @@ export class TarotGame {
             return TarotGame.notifyErrorWhileSettingAside(playerThatSetAside);
         }
         this.table.moveFromHandToPointsOf(cardsSetAside, playerThatSetAside.id);
-        this.takerHasExcuseAtStartOfGame = this.table.listCardsOf(this.taker.id).some((playingCard: PlayingCard) => isExcuse(playingCard))
-        this.cardGameManager.gameIsOver().subscribe(_ => this.endGame())
         TarotGame.notifyCardsAvailable(this.taker, this.table.listCardsOf(this.taker.id))
-        this.cardGameManager.begin();
-        this.gameHasBegan = true;
+        this.beginGame();
     }
 
     public play(playerThatPlay: TarotPlayer, card: PlayingCard) {
         this.cardGameManager.play(playerThatPlay, card)
     }
 
+    private beginGame() {
+        this.takerHasExcuseAtStartOfGame = this.table.listCardsOf(this.taker.id).some((playingCard: PlayingCard) => isExcuse(playingCard))
+        this.cardGameManager.gameIsOver().subscribe(_ => this.endGame())
+        this.cardGameManager.begin();
+        this.gameHasBegan = true;
+    }
+
     private resolveTakerAndContinueOrEndGame() {
         this.announceManager.announcesAreComplete().subscribe((takerAnnounce) => {
-            if (takerAnnounce) {
-                this.taker = takerAnnounce.taker;
-                this.players.forEach((playerToNotify) => TarotGame.notifyTakerIsKnown(playerToNotify, takerAnnounce.taker, takerAnnounce.announce))
-                this.table.giveDogToPlayer(this.taker.id)
-                TarotGame.notifyCardsAvailable(this.taker, this.table.listCardsOf(this.taker.id))
-                TarotGame.notifyPlayerHasToSetAside(this.taker, this.getPossibleCardsToSetAside(this.table.listCardsOf(this.taker.id), this.numberOfCardsInDog))
-            } else {
+            if (!takerAnnounce) {
                 this.players.forEach((playerToNotify) => TarotGame.notifyGameAborted(playerToNotify))
                 this.endOfGameCallback(this.noTakerGameResult())
+                return;
+            }
+            this.taker = takerAnnounce.taker;
+            this.players.forEach((playerToNotify) => TarotGame.notifyTakerIsKnown(playerToNotify, takerAnnounce.taker, takerAnnounce.announce))
+            switch (takerAnnounce.announce) {
+                case Announce.PRISE:
+                case Announce.GARDE:
+                    this.managePriseOrGarde();
+                    break;
+                case Announce.GARDE_SANS:
+                    this.manageGardeSans();
+                    break;
+                case Announce.GARDE_CONTRE:
+                    this.manageGardeContre();
+                    break;
             }
         })
         this.announceManager.beginAnnounces();
+    }
+
+    private managePriseOrGarde() {
+        this.table.giveDogToPlayerHand(this.taker.id)
+        TarotGame.notifyCardsAvailable(this.taker, this.table.listCardsOf(this.taker.id))
+        TarotGame.notifyPlayerHasToSetAside(this.taker, this.getPossibleCardsToSetAside(this.table.listCardsOf(this.taker.id), this.numberOfCardsInDog))
+    }
+
+    private manageGardeSans() {
+        this.table.giveDogToPlayerPoints(this.taker.id)
+        this.beginGame();
+    }
+
+    private manageGardeContre() {
+        const playerThatIsNotTaker = this.players.find(player => player.id !== this.taker.id);
+        this.table.giveDogToPlayerPoints(playerThatIsNotTaker.id)
+        this.beginGame();
     }
 
     private noTakerGameResult(): GameResultWithDeck {
