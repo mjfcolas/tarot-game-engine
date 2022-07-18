@@ -120,18 +120,32 @@ describe('Simulate a complete game', function () {
         when simulating a complete game,
         then games can complete`, (done) => {
 
+        const playerIdentifiers = ["0", "1", "2", "3"]
+
         const players: TarotPlayer[] = [
-            new TestPlayer("0"),
-            new TestPlayer("1"),
-            new TestPlayer("2"),
-            new TestPlayer("3")
+            new TestPlayer(playerIdentifiers[0]),
+            new TestPlayer(playerIdentifiers[1]),
+            new TestPlayer(playerIdentifiers[2]),
+            new TestPlayer(playerIdentifiers[3])
         ]
+
+        const expectedAttackScore = 204;
+        const expectedDefenseScore = -68;
+
         const tarotGame: TarotGame = getTarotGame(
             DECK_78,
             players,
             (gameResult: GameResultWithDeck) => {
                 console.log(gameResult)
                 expect(gameResult.numberOfPointsForAttack).toEqual(50)
+                expect(gameResult.finalScores[0].player).toEqual(playerIdentifiers[0])
+                expect(gameResult.finalScores[0].score).toEqual(expectedDefenseScore)
+                expect(gameResult.finalScores[1].player).toEqual(playerIdentifiers[1])
+                expect(gameResult.finalScores[1].score).toEqual(expectedDefenseScore)
+                expect(gameResult.finalScores[2].player).toEqual(playerIdentifiers[2])
+                expect(gameResult.finalScores[2].score).toEqual(expectedAttackScore)
+                expect(gameResult.finalScores[3].player).toEqual(playerIdentifiers[3])
+                expect(gameResult.finalScores[3].score).toEqual(expectedDefenseScore)
                 done()
             },
             predictableDealFunction

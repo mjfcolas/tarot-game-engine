@@ -36,6 +36,7 @@ describe(`Tarot turn resolver`, () => {
             },
         ]
         const expectedTurnResult: TurnResult = {
+            playedCards: playedCards,
             winner: "P3",
             wonCardsByPlayer: [
                 {
@@ -81,6 +82,7 @@ describe(`Tarot turn resolver`, () => {
             },
         ]
         const expectedTurnResult: TurnResult = {
+            playedCards: playedCards,
             winner: "P3",
             wonCardsByPlayer: [
                 {
@@ -126,6 +128,7 @@ describe(`Tarot turn resolver`, () => {
             },
         ]
         const expectedTurnResult: TurnResult = {
+            playedCards: playedCards,
             winner: "P2",
             wonCardsByPlayer: [
                 {
@@ -170,6 +173,7 @@ describe(`Tarot turn resolver`, () => {
             },
         ]
         const expectedTurnResult: TurnResult = {
+            playedCards: playedCards,
             winner: "P1",
             wonCardsByPlayer: [
                 {
@@ -215,6 +219,7 @@ describe(`Tarot turn resolver`, () => {
             },
         ]
         const expectedTurnResult: TurnResult = {
+            playedCards: playedCards,
             winner: "P3",
             wonCardsByPlayer: [
                 {
@@ -260,6 +265,7 @@ describe(`Tarot turn resolver`, () => {
             },
         ]
         const expectedTurnResult: TurnResult = {
+            playedCards: playedCards,
             winner: "P3",
             wonCardsByPlayer: [
                 {

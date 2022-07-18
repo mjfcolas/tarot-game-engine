@@ -1,88 +1,87 @@
-import {countTarotEndGameScore} from "./count-tarot-end-game-score";
-import {PlayingCard} from "tarot-card-deck";
-import {
-    HEART_1,
-    HEART_2,
-    HEART_3,
-    HEART_4,
-    HEART_C,
-    HEART_J,
-    HEART_K,
-    HEART_Q,
-    EXCUSE,
-    TRUMP_1,
-    TRUMP_21
-} from "tarot-card-deck/dist/cards/all-playing-cards";
+import {Announce} from "../announce/announce";
+import {countFourPlayersTarotScore, EndGameScore, EndGameStatus, Poignee} from "./count-tarot-end-game-score";
 
-describe('Count tarot end game score', function () {
+describe('Count tarot end game scores', function () {
 
-    test(`Given taker that has won 4 small cards and that did not have excuse at start of game,
-        when counting his points,
-        then returns expected number of points`, () => {
-        const wonCards: PlayingCard[] = [HEART_1, HEART_2, HEART_3, HEART_4];
-        expect(countTarotEndGameScore(wonCards, false)).toEqual(2)
-    });
+    const testCases: { parameters: EndGameStatus, expectedResult: EndGameScore }[] = [{
+        parameters: {
+            announce: Announce.GARDE,
+            attackNumberOfPoints: 49,
+            poignee: Poignee.SINGLE,
+            petitInLastTrick: "ATTACK",
+            attackNumberOfOudlers: 2,
+        },
+        expectedResult: {
+            attackScoreByPlayer: 318,
+            defenseScoreByPlayer: -106
+        }
+    }, {
+        parameters: {
+            announce: Announce.GARDE_SANS,
+            attackNumberOfPoints: 55,
+            poignee: null,
+            petitInLastTrick: "DEFENSE",
+            attackNumberOfOudlers: 1,
+        },
+        expectedResult: {
+            attackScoreByPlayer: 228,
+            defenseScoreByPlayer: -76
+        }
+    }, {
+        parameters: {
+            announce: Announce.GARDE_CONTRE,
+            attackNumberOfPoints: 55,
+            poignee: Poignee.TRIPLE,
+            petitInLastTrick: null,
+            attackNumberOfOudlers: 3,
+        },
+        expectedResult: {
+            attackScoreByPlayer: 912,
+            defenseScoreByPlayer: -304
+        }
+    }, {
+        parameters: {
+            announce: Announce.PRISE,
+            attackNumberOfPoints: 49,
+            poignee: Poignee.SINGLE,
+            petitInLastTrick: "ATTACK",
+            attackNumberOfOudlers: 0,
+        },
+        expectedResult: {
+            attackScoreByPlayer: -126,
+            defenseScoreByPlayer: 42
+        }
+    }, {
+        parameters: {
+            announce: Announce.GARDE,
+            attackNumberOfPoints: 52,
+            poignee: Poignee.SINGLE,
+            petitInLastTrick: null,
+            attackNumberOfOudlers: 2,
+        },
+        expectedResult: {
+            attackScoreByPlayer: 276,
+            defenseScoreByPlayer: -92
+        }
+    }, {
+        parameters: {
+            announce: Announce.PRISE,
+            attackNumberOfPoints: 56,
+            poignee: Poignee.DOUBLE,
+            petitInLastTrick: null,
+            attackNumberOfOudlers: 0,
+        },
+        expectedResult: {
+            attackScoreByPlayer: 165,
+            defenseScoreByPlayer: -55
+        }
+    }]
 
-    test(`Given taker that has won 3 small cards and a king and that did not have excuse at start of game,
-        when counting his points,
-        then returns expected number of points`, () => {
-        const wonCards: PlayingCard[] = [HEART_1, HEART_2, HEART_3, HEART_K];
-        expect(countTarotEndGameScore(wonCards, false)).toEqual(6)
-    });
+    test.each(testCases)(`Given %p, when counting scores, then returns %p`, (testCase) => {
+        const result = countFourPlayersTarotScore(testCase.parameters);
+        const expectedResult = testCase.expectedResult;
+        expect(result.attackScoreByPlayer).toBe(expectedResult.attackScoreByPlayer)
+        expect(result.defenseScoreByPlayer).toBe(expectedResult.defenseScoreByPlayer)
+    })
 
-    test(`Given taker that has won 3 small cards and a queen and that did not have excuse at start of game,
-        when counting his points,
-        then returns expected number of points`, () => {
-        const wonCards: PlayingCard[] = [HEART_1, HEART_2, HEART_3, HEART_Q];
-        expect(countTarotEndGameScore(wonCards, false)).toEqual(5)
-    });
-
-    test(`Given taker that has won 3 small cards and a cavalier and that did not have excuse at start of game,
-        when counting his points,
-        then returns expected number of points`, () => {
-        const wonCards: PlayingCard[] = [HEART_1, HEART_2, HEART_3, HEART_C];
-        expect(countTarotEndGameScore(wonCards, false)).toEqual(4)
-    });
-
-    test(`Given taker that has won 3 small cards and a jack and that did not have excuse at start of game,
-        when counting his points,
-        then returns expected number of points`, () => {
-        const wonCards: PlayingCard[] = [HEART_1, HEART_2, HEART_3, HEART_J];
-        expect(countTarotEndGameScore(wonCards, false)).toEqual(3)
-    });
-
-    test(`Given taker that has won 3 small cards and the one of trump and that did not have excuse at start of game,
-        when counting his points,
-        then returns expected number of points`, () => {
-        const wonCards: PlayingCard[] = [HEART_1, HEART_2, HEART_3, TRUMP_1];
-        expect(countTarotEndGameScore(wonCards, false)).toEqual(6)
-    });
-
-    test(`Given taker that has won 3 small cards and the 21 of trump and that did not have excuse at start of game,
-        when counting his points,
-        then returns expected number of points`, () => {
-        const wonCards: PlayingCard[] = [HEART_1, HEART_2, HEART_3, TRUMP_21];
-        expect(countTarotEndGameScore(wonCards, false)).toEqual(6)
-    });
-
-    test(`Given taker that has won 3 small cards and the excuse and that did not have excuse at start of game,
-        when counting his points,
-        then returns expected number of points`, () => {
-        const wonCards: PlayingCard[] = [HEART_1, HEART_2, HEART_3, EXCUSE];
-        expect(countTarotEndGameScore(wonCards, false)).toEqual(2)
-    });
-
-    test(`Given taker that has won 3 small cards and the excuse and that has excuse at start of game,
-        when counting his points,
-        then returns expected number of points`, () => {
-        const wonCards: PlayingCard[] = [HEART_1, HEART_2, HEART_3, EXCUSE];
-        expect(countTarotEndGameScore(wonCards, true)).toEqual(6)
-    });
-
-    test(`Given taker that has won 4 small cards and that has excuse at start of game,
-        when counting his points,
-        then returns expected number of points`, () => {
-        const wonCards: PlayingCard[] = [HEART_1, HEART_2, HEART_3, HEART_4];
-        expect(countTarotEndGameScore(wonCards, true)).toEqual(6)
-    });
 });

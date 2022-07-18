@@ -1,17 +1,26 @@
 import {TarotPlayer} from "./player/tarot-player";
 import {Announce} from "./announce/announce";
 import {AnnounceManager} from "./announce/announce-manager";
-import {CardGameManager} from "../card-game/card-game-manager";
+import {CardGameManager, Trick} from "../card-game/card-game-manager";
 import {TarotTable} from "./table/ports/tarot-table";
 import {TarotDealer} from "./dealer/tarot-dealer";
 import {PlayingCard} from "tarot-card-deck";
 import {GetIncorrectCardsSetAside, GetPossibleCardsToSetAside} from "./functions/tarot-available-cards-to-set-aside";
-import {CountEndGameScore} from "./functions/count-tarot-end-game-score";
-import {isExcuse} from "./cards/card-types";
+import {CountEndGameTakerPoints} from "./functions/count-tarot-end-game-taker-points";
+import {isExcuse, isOudler, isTrumpCard} from "./cards/card-types";
+import {CountEndGameScore, EndGameScore, Team} from "./functions/count-tarot-end-game-score";
+import {TRUMP_1} from "tarot-card-deck/dist/cards/all-playing-cards";
+import {PlayerIdentifier} from "../card-game/player/card-game-player";
+
+export type PlayerWithScore = {
+    player: PlayerIdentifier,
+    score: number
+}
 
 export type GameResultWithDeck = {
     numberOfPointsForAttack: number
     numberOfPointsForDefense: number
+    finalScores: readonly PlayerWithScore[]
     endOfGameDeck: readonly PlayingCard[]
 }
 
@@ -19,6 +28,7 @@ export class TarotGame {
 
     private readonly numberOfCardsInDog = 6;
     private taker: TarotPlayer = undefined;
+    private takerAnnounce: Announce = undefined;
     private gameHasBegan = false;
     private takerHasExcuseAtStartOfGame = undefined;
 
@@ -30,6 +40,7 @@ export class TarotGame {
         private readonly cardGameManager: CardGameManager,
         private readonly verifyCardsSetAside: GetIncorrectCardsSetAside,
         private readonly getPossibleCardsToSetAside: GetPossibleCardsToSetAside,
+        private readonly countEndGameTakerPoints: CountEndGameTakerPoints,
         private readonly countEndGameScore: CountEndGameScore,
         private readonly endOfGameCallback: (gameResult: GameResultWithDeck) => void) {
         this.table.shuffle();
@@ -61,7 +72,7 @@ export class TarotGame {
 
     private beginGame() {
         this.takerHasExcuseAtStartOfGame = this.table.listCardsOf(this.taker.id).some((playingCard: PlayingCard) => isExcuse(playingCard))
-        this.cardGameManager.gameIsOver().subscribe(_ => this.endGame())
+        this.cardGameManager.gameIsOver().subscribe(endGameTricks => this.endGame(endGameTricks))
         this.cardGameManager.begin();
         this.gameHasBegan = true;
     }
@@ -74,6 +85,7 @@ export class TarotGame {
                 return;
             }
             this.taker = takerAnnounce.taker;
+            this.takerAnnounce = takerAnnounce.announce;
             this.players.forEach((playerToNotify) => TarotGame.notifyTakerIsKnown(playerToNotify, takerAnnounce.taker, takerAnnounce.announce))
             switch (takerAnnounce.announce) {
                 case Announce.PRISE:
@@ -112,13 +124,17 @@ export class TarotGame {
         return {
             numberOfPointsForAttack: undefined,
             numberOfPointsForDefense: undefined,
+            finalScores: this.players.map(currentPlayer => ({
+                player: currentPlayer.id,
+                score: 0
+            })),
             endOfGameDeck: this.table.gatherDeck()
         }
     }
 
 
-    private endGame(): void {
-        const endedGameResult: GameResultWithDeck = this.endedGameResult();
+    private endGame(allTricks: Trick[]): void {
+        const endedGameResult: GameResultWithDeck = this.endedGameResult(allTricks);
         this.players.forEach((playerToNotify) => TarotGame.notifyGameIsOver(
             playerToNotify,
             endedGameResult.numberOfPointsForAttack,
@@ -126,16 +142,41 @@ export class TarotGame {
         this.endOfGameCallback(endedGameResult)
     }
 
-    private endedGameResult(): GameResultWithDeck {
-        const endGameScoreForTaker: number = this.countEndGameScore(
-            this.table.listPointsFor(this.taker.id),
+    private endedGameResult(allTricks: Trick[]): GameResultWithDeck {
+        const wonCardsByTaker: PlayingCard[] = this.table.listPointsFor(this.taker.id);
+        const endGamePointsForTaker: number = this.countEndGameTakerPoints(
+            wonCardsByTaker,
             this.takerHasExcuseAtStartOfGame);
+
+
+        const endGameScores: EndGameScore = this.countEndGameScore({
+            announce: this.takerAnnounce,
+            poignee: null,
+            petitInLastTrick: this.resolveTeamThatPlayedPetitInLastTrick(allTricks[allTricks.length - 1]),
+            attackNumberOfOudlers: wonCardsByTaker.filter(card => isOudler(card) && isTrumpCard(card)).length + (this.takerHasExcuseAtStartOfGame ? 1 : 0),
+            attackNumberOfPoints: endGamePointsForTaker
+        })
+
+        const finalScores: PlayerWithScore[] = this.players.map(currentPlayer => ({
+            player: currentPlayer.id,
+            score: currentPlayer === this.taker ? endGameScores.attackScoreByPlayer : endGameScores.defenseScoreByPlayer
+        }))
         const totalNumberOfPointsInGame = 91;
         return {
-            numberOfPointsForAttack: endGameScoreForTaker,
-            numberOfPointsForDefense: totalNumberOfPointsInGame - endGameScoreForTaker,
+            numberOfPointsForAttack: endGamePointsForTaker,
+            numberOfPointsForDefense: totalNumberOfPointsInGame - endGamePointsForTaker,
+            finalScores: finalScores,
             endOfGameDeck: this.table.gatherDeck()
         }
+    }
+
+    private resolveTeamThatPlayedPetitInLastTrick(lastTrick: Trick): Team {
+        const petitInLastTrick = lastTrick.cards.some(playedCard => playedCard.playingCard === TRUMP_1);
+        if (!petitInLastTrick) {
+            return null;
+        }
+
+        return lastTrick.winner === this.taker.id ? "ATTACK" : "DEFENSE";
     }
 
     private static notifyTakerIsKnown(playerToNotify: TarotPlayer, playerThatHaveAnnounced: TarotPlayer, announce?: Announce): void {
