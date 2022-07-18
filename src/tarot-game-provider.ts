@@ -15,7 +15,8 @@ import {
     getIncorrectCardsSetAside,
     getPossibleCardsToSetAside
 } from "./domain/tarot-game/functions/tarot-available-cards-to-set-aside";
-import {countTarotEndGameScore} from "./domain/tarot-game/functions/count-tarot-end-game-score";
+import {countTarotEndGameTakerPoints} from "./domain/tarot-game/functions/count-tarot-end-game-taker-points";
+import {countFourPlayersTarotScore} from "./domain/tarot-game/functions/count-tarot-end-game-score";
 
 export function getTarotGame(
     playingCards: readonly PlayingCard[],
@@ -27,5 +28,5 @@ export function getTarotGame(
     const announceManager: AnnounceManager = new DefaultAnnounceManager(players);
     const cardGameManager: CardGameManager = new DefaultCardGameManager(resolveTarotTurn, getPlayableTarotCards, table, players);
     const dealer: TarotDealer = new DefaultTarotDealer(table, players, dealFunction)
-    return new TarotGame(players, table, dealer, announceManager, cardGameManager, getIncorrectCardsSetAside, getPossibleCardsToSetAside, countTarotEndGameScore, endOfGameCallback);
+    return new TarotGame(players, table, dealer, announceManager, cardGameManager, getIncorrectCardsSetAside, getPossibleCardsToSetAside, countTarotEndGameTakerPoints, countFourPlayersTarotScore, endOfGameCallback);
 }

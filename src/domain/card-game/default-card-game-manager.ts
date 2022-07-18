@@ -1,4 +1,4 @@
-import {CardGameManager} from "./card-game-manager";
+import {CardGameManager, Trick} from "./card-game-manager";
 import {Observable, ReplaySubject, Subject} from "rxjs";
 import {PlayedCard, ResolveTurn, TurnResult} from "./functions/resolve-turn";
 import {GetPlayableCards} from "./functions/playable-cards";
@@ -6,8 +6,10 @@ import {PlayableTable} from "./ports/playable-table";
 import {CardGamePlayer, PlayerIdentifier} from "./player/card-game-player";
 import {PlayingCard} from "tarot-card-deck";
 
+
 export class DefaultCardGameManager implements CardGameManager {
-    private readonly gameIsOverSubject: Subject<PlayableTable> = new ReplaySubject(1);
+    private readonly gameIsOverSubject: Subject<Trick[]> = new ReplaySubject(1);
+    private readonly gameTricks: Trick[] = [];
     private currentTurnManager: OneTurnManager;
 
     constructor(
@@ -29,7 +31,7 @@ export class DefaultCardGameManager implements CardGameManager {
         this.beginTurn(this.players[0]);
     }
 
-    gameIsOver(): Observable<PlayableTable> {
+    gameIsOver(): Observable<Trick[]> {
         return this.gameIsOverSubject;
     }
 
@@ -47,11 +49,15 @@ export class DefaultCardGameManager implements CardGameManager {
         const turnWinner: CardGamePlayer = this.players.find((currentPlayer) => currentPlayer.id === turnResult.winner)
         this.players.forEach((playerToNotify) => DefaultCardGameManager.notifyEndOfTurn(playerToNotify, turnWinner))
         turnResult.wonCardsByPlayer.forEach((wonCardsForPlayer) => this.table.moveFromTableToPointsOf(wonCardsForPlayer.wonCards, wonCardsForPlayer.playerIdentifier))
+        this.gameTricks.push({
+            cards: turnResult.playedCards,
+            winner: turnResult.winner
+        })
 
         if (this.table.getNumberOfRemainingCardsToPlayFor(this.players[0].id) !== 0) {
             this.beginTurn(turnWinner);
         } else {
-            this.gameIsOverSubject.next(this.table);
+            this.gameIsOverSubject.next(this.gameTricks);
         }
     }
 }
