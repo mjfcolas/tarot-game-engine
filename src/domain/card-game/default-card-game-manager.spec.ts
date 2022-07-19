@@ -3,6 +3,8 @@ import {CardGameManager} from "./card-game-manager";
 import {MockedPlayableTable} from "./ports/__mock__/mocked-playable-table";
 import {DummyCardGamePlayer} from "./player/__dummy__/dummy-card-game-player";
 import {DECK_78} from "tarot-card-deck";
+import {SPADE_4, SPADE_C, TRUMP_1, TRUMP_21} from "tarot-card-deck/dist/cards/all-playing-cards";
+import {PlayedCard, TurnResult} from "./functions/resolve-turn";
 
 describe(`Default card game manager`, () => {
 
@@ -21,34 +23,51 @@ describe(`Default card game manager`, () => {
     const mockedGetPlayableCards = jest.fn()
     mockedGetPlayableCards.mockReturnValue([aPlayingCard])
 
+    const playerIdentifiers = [
+        "1", "2", "3", "4"
+    ]
     let players: DummyCardGamePlayer[];
     beforeEach(() => {
         players = [
-            new DummyCardGamePlayer("1"),
-            new DummyCardGamePlayer("2"),
-            new DummyCardGamePlayer("3"),
-            new DummyCardGamePlayer("4")
+            new DummyCardGamePlayer(playerIdentifiers[0]),
+            new DummyCardGamePlayer(playerIdentifiers[1]),
+            new DummyCardGamePlayer(playerIdentifiers[2]),
+            new DummyCardGamePlayer(playerIdentifiers[3])
         ]
 
     })
 
-    const getTurnResultForPlayer = (player: DummyCardGamePlayer) => ({
+    const cardsInTrick: PlayedCard[] = [{
+        playerIdentifier: playerIdentifiers[0],
+        playingCard: TRUMP_1
+    }, {
+        playerIdentifier: playerIdentifiers[1],
+        playingCard: TRUMP_21
+    }, {
+        playerIdentifier: playerIdentifiers[2],
+        playingCard: SPADE_4
+    }, {
+        playerIdentifier: playerIdentifiers[3],
+        playingCard: SPADE_C
+    }];
+    const getTurnResultForPlayer: (player: DummyCardGamePlayer) => TurnResult = (player: DummyCardGamePlayer) => ({
+        playedCards: cardsInTrick,
         winner: player.id,
         wonCardsByPlayer: [
             {
-                playerIdentifier: players[0].id,
+                playerIdentifier: playerIdentifiers[0],
                 wonCards: []
             },
             {
-                playerIdentifier: players[1].id,
+                playerIdentifier: playerIdentifiers[1],
                 wonCards: []
             },
             {
-                playerIdentifier: players[2].id,
+                playerIdentifier: playerIdentifiers[2],
                 wonCards: []
             },
             {
-                playerIdentifier: players[3].id,
+                playerIdentifier: playerIdentifiers[3],
                 wonCards: []
             },
         ]
@@ -206,12 +225,17 @@ describe(`Default card game manager`, () => {
 
     test(`Given a turn that has just ended,
         when there is no more cards to play,
-        then table after end of game is emitted`, (done) => {
+        then list of all tricks is emitted`, (done) => {
         const cardGameManager: DefaultCardGameManager = new DefaultCardGameManager(mockedResolveTurn, mockedGetPlayableCards, mockedTarotTable, players);
         cardGameManager.begin();
+        mockedResolveTurn.mockReturnValue(getTurnResultForPlayer(players[1]))
         mockedTarotTable.getNumberOfRemainingCardsToPlayFor.mockReturnValue(0);
-        cardGameManager.gameIsOver().subscribe(endGameTable => {
-            expect(endGameTable).toBeTruthy()
+        cardGameManager.gameIsOver().subscribe(endGameTricks => {
+            expect(endGameTricks.length).toEqual(1)
+            expect(endGameTricks[0]).toEqual({
+                winner: players[1].id,
+                cards: cardsInTrick
+            })
             done()
         })
         playCompleteTurn(cardGameManager);

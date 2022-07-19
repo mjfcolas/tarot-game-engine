@@ -48,14 +48,28 @@ describe('Playable Tarot Table', function () {
     })
 
     test(`Given a table, 
-    when putting cards in dog and giving the dog to a player,
+    when putting cards in dog and giving the dog to a player hand,
     then a player has those cards in its deck`, () => {
         const table: PlayableTarotTable = new PlayableTarotTable(aDeck);
         table.putCardInDog(DECK_78[0].identifier)
         table.putCardInDog(DECK_78[1].identifier)
 
-        table.giveDogToPlayer("PLAYER")
+        table.giveDogToPlayerHand("PLAYER")
         expect(table.listCardsOf("PLAYER")).toEqual([
+            DECK_78[0],
+            DECK_78[1]
+        ]);
+    })
+
+    test(`Given a table, 
+    when putting cards in dog and giving the dog to a player points,
+    then the player has those cards in its points`, () => {
+        const table: PlayableTarotTable = new PlayableTarotTable(aDeck);
+        table.putCardInDog(DECK_78[0].identifier)
+        table.putCardInDog(DECK_78[1].identifier)
+
+        table.giveDogToPlayerPoints("PLAYER")
+        expect(table.listPointsFor("PLAYER")).toEqual([
             DECK_78[0],
             DECK_78[1]
         ]);

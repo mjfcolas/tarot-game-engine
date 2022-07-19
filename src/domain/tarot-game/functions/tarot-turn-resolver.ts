@@ -34,12 +34,13 @@ export function resolveTarotTurn(playedCards: readonly PlayedCard[]): TurnResult
     const players: PlayerIdentifier[] = playedCards.map(playedCard => playedCard.playerIdentifier);
 
     return {
+        playedCards: playedCards,
         winner: winnerPlayedCard.playerIdentifier,
         wonCardsByPlayer: players.map(currentPlayer => {
             if (currentPlayer === winnerPlayedCard.playerIdentifier) {
                 return {
                     playerIdentifier: currentPlayer,
-                    wonCards: playedCards.map(playedCard => playedCard.playingCard)
+                    wonCards: playedCards.map(playedCard => playedCard.playingCard),
                 }
             } else {
                 return {

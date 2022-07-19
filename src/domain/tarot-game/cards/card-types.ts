@@ -27,9 +27,9 @@ export function isTrumpCard(playingCard: PlayingCard): playingCard is TrumpCard 
     return playingCard.type === PlayingCardType.TRUMP
 }
 
-export const isOudler = (playingCard: PlayingCard) => playingCard.type === PlayingCardType.JOKER
+export const isOudler = (playingCard: PlayingCard) => playingCard.type === PlayingCardType.EXCUSE
     || playingCard.type === PlayingCardType.TRUMP && (playingCard.value === 1 || playingCard.value === 21);
-export const isExcuse = (playingCard: PlayingCard) => playingCard.type === PlayingCardType.JOKER
+export const isExcuse = (playingCard: PlayingCard) => playingCard.type === PlayingCardType.EXCUSE
 export const isKing = (playingCard: PlayingCard) => (playingCard.type === PlayingCardType.FACE && playingCard.face === Face.K);
 export const isQueen = (playingCard: PlayingCard) => (playingCard.type === PlayingCardType.FACE && playingCard.face === Face.Q);
 export const isCavalier = (playingCard: PlayingCard) => (playingCard.type === PlayingCardType.FACE && playingCard.face === Face.C);

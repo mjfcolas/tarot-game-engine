@@ -1,7 +1,7 @@
 import {PlayedCard, TurnResult} from "../../card-game/functions/resolve-turn";
 import {
     HEART_9,
-    JOKER,
+    EXCUSE,
     SPADE_1,
     SPADE_2,
     SPADE_3,
@@ -36,6 +36,7 @@ describe(`Tarot turn resolver`, () => {
             },
         ]
         const expectedTurnResult: TurnResult = {
+            playedCards: playedCards,
             winner: "P3",
             wonCardsByPlayer: [
                 {
@@ -81,6 +82,7 @@ describe(`Tarot turn resolver`, () => {
             },
         ]
         const expectedTurnResult: TurnResult = {
+            playedCards: playedCards,
             winner: "P3",
             wonCardsByPlayer: [
                 {
@@ -126,6 +128,7 @@ describe(`Tarot turn resolver`, () => {
             },
         ]
         const expectedTurnResult: TurnResult = {
+            playedCards: playedCards,
             winner: "P2",
             wonCardsByPlayer: [
                 {
@@ -170,6 +173,7 @@ describe(`Tarot turn resolver`, () => {
             },
         ]
         const expectedTurnResult: TurnResult = {
+            playedCards: playedCards,
             winner: "P1",
             wonCardsByPlayer: [
                 {
@@ -215,6 +219,7 @@ describe(`Tarot turn resolver`, () => {
             },
         ]
         const expectedTurnResult: TurnResult = {
+            playedCards: playedCards,
             winner: "P3",
             wonCardsByPlayer: [
                 {
@@ -244,7 +249,7 @@ describe(`Tarot turn resolver`, () => {
         const playedCards: readonly PlayedCard[] = [
             {
                 playerIdentifier: "P0",
-                playingCard: JOKER
+                playingCard: EXCUSE
             },
             {
                 playerIdentifier: "P1",
@@ -260,6 +265,7 @@ describe(`Tarot turn resolver`, () => {
             },
         ]
         const expectedTurnResult: TurnResult = {
+            playedCards: playedCards,
             winner: "P3",
             wonCardsByPlayer: [
                 {
@@ -276,7 +282,7 @@ describe(`Tarot turn resolver`, () => {
                 },
                 {
                     playerIdentifier: "P3",
-                    wonCards: [JOKER, SPADE_3, SPADE_2, SPADE_4]
+                    wonCards: [EXCUSE, SPADE_3, SPADE_2, SPADE_4]
                 },
             ]
         }
