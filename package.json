@@ -15,7 +15,14 @@
     "type": "git",
     "url": "https://github.com/mjfcolas/tarot-game-engine.git"
   },
-  "keywords": [],
+  "keywords": [
+    "tarot",
+    "game engine",
+    "engine",
+    "card game",
+    "trick",
+    "trick-taking game"
+  ],
   "author": "mjfcolas",
   "license": "ISC",
   "dependencies": {
