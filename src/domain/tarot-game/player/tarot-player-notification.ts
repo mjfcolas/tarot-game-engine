@@ -1,8 +1,8 @@
 import {Announce} from "../announce/announce";
-import {TarotPlayer} from "./tarot-player";
 import {CardGamePlayerNotification} from "../../card-game/player/card-game-player-notification";
 import {PlayerIdentifier} from "../../card-game/player/card-game-player";
 import {PlayingCard} from "tarot-card-deck";
+import {PlayerWithScore} from "../tarot-game";
 
 export type TarotPlayerNotification = CardGamePlayerNotification | {
     type: "ASKED_FOR_ANNOUNCE"
@@ -17,12 +17,13 @@ export type TarotPlayerNotification = CardGamePlayerNotification | {
     type: "TAKER_IS_KNOWN",
     player: PlayerIdentifier,
     announce?: Announce
-}| {
+} | {
     type: "GAME_IS_ABORTED"
 } | {
     type: "GAME_IS_OVER",
     numberOfPointsForAttack: number,
-    numberOfPointsForDefense: number
+    numberOfPointsForDefense: number,
+    finalScores: readonly PlayerWithScore[]
 } | {
     type: "ASKED_FOR_SET_ASIDE",
     possibleCardsToSetAside: PlayingCard[]
