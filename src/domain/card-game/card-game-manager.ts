@@ -5,7 +5,7 @@ import {PlayedCard} from "./functions/resolve-turn";
 
 export type Trick = {
     winner: PlayerIdentifier,
-    cards: PlayedCard[]
+    cards: readonly PlayedCard[]
 }
 
 export interface CardGameManager {

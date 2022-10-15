@@ -1,6 +1,6 @@
 import {AnnounceManager} from "./announce-manager";
 import {TarotPlayer} from "../player/tarot-player";
-import {Announce, pruneAnnouncesLowerThanGivenAnnounce} from "./announce";
+import {Announce, pruneAnnouncesLowerThanGivenAnnounceFrom} from "./announce";
 import {TakerAnnounce} from "./taker-announce";
 import {Observable, ReplaySubject, Subject} from "rxjs";
 
@@ -51,7 +51,7 @@ export class DefaultAnnounceManager implements AnnounceManager {
             return DefaultAnnounceManager.notifyErrorWhileAnnouncing(playerThatAnnounce);
         }
 
-        this.availableAnnounces = pruneAnnouncesLowerThanGivenAnnounce(announce)
+        this.availableAnnounces = [...pruneAnnouncesLowerThanGivenAnnounceFrom(this.availableAnnounces, announce)]
         this.players.forEach((playerToNotify) => DefaultAnnounceManager.notifyPlayerHasAnnounced(playerToNotify, playerThatAnnounce, announce))
 
         if(announce){
