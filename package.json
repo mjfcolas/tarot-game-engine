@@ -1,6 +1,6 @@
 {
   "name": "tarot-game-engine",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "A tarot card game Engine",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -16,7 +16,7 @@
     "url": "https://github.com/mjfcolas/tarot-game-engine.git"
   },
   "keywords": [],
-  "author": "",
+  "author": "mjfcolas",
   "license": "ISC",
   "dependencies": {
     "play-with-deck": "^1.0.1",
