@@ -4,5 +4,5 @@ import {TarotPlayerNotification} from "./tarot-player-notification";
 export interface TarotPlayer extends CardGamePlayer {
     id: PlayerIdentifier
 
-    notify(playerNotification: TarotPlayerNotification)
+    notify(playerNotification: TarotPlayerNotification): void
 }

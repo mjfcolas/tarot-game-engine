@@ -154,4 +154,16 @@ describe(`Default announce manager`, () => {
 
         expect(players[0].announceError).toHaveBeenCalled()
     })
+
+    test(`Given an announce manager and a first player that has announced a garde contre,
+    when second player announce nothing,
+    then an announce request is emitted to third player with no remaining choices`, () => {
+        const announceManager: AnnounceManager = new DefaultAnnounceManager(players)
+        announceManager.beginAnnounces();
+        announceManager.announce(players[0], Announce.GARDE_CONTRE)
+        announceManager.announce(players[1], null)
+
+        const expectedAnnounces = [];
+        expect(players[2].availableAnnounces).toEqual(expectedAnnounces)
+    });
 });

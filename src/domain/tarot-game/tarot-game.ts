@@ -137,8 +137,7 @@ export class TarotGame {
         const endedGameResult: GameResultWithDeck = this.endedGameResult(allTricks);
         this.players.forEach((playerToNotify) => TarotGame.notifyGameIsOver(
             playerToNotify,
-            endedGameResult.numberOfPointsForAttack,
-            endedGameResult.numberOfPointsForDefense))
+            endedGameResult))
         this.endOfGameCallback(endedGameResult)
     }
 
@@ -200,11 +199,12 @@ export class TarotGame {
         })
     }
 
-    private static notifyGameIsOver(playerToNotify: TarotPlayer, numberOfPointsForAttack: number, numberOfPointsForDefense: number): void {
+    private static notifyGameIsOver(playerToNotify: TarotPlayer, gameResultWithDeck: GameResultWithDeck): void {
         playerToNotify.notify({
             type: "GAME_IS_OVER",
-            numberOfPointsForAttack: numberOfPointsForAttack,
-            numberOfPointsForDefense: numberOfPointsForDefense
+            numberOfPointsForAttack: gameResultWithDeck.numberOfPointsForAttack,
+            numberOfPointsForDefense: gameResultWithDeck.numberOfPointsForDefense,
+            finalScores: gameResultWithDeck.finalScores
         })
     }
 
