@@ -1,11 +1,11 @@
-import {PlayingCard} from "tarot-card-deck";
 import {
     CLUB_10,
     CLUB_K,
+    EXCUSE,
     HEART_3,
     HEART_4,
     HEART_5,
-    EXCUSE,
+    PlayingCard,
     SPADE_3,
     SPADE_4,
     TRUMP_1,
@@ -15,7 +15,7 @@ import {
     TRUMP_2,
     TRUMP_20,
     TRUMP_5
-} from "tarot-card-deck/dist/cards/all-playing-cards";
+} from "tarot-card-deck";
 import {getPlayableTarotCards} from "./tarot-playable-cards";
 
 describe(`Get playable tarot cards`, () => {

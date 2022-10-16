@@ -1,6 +1,6 @@
 import {countTarotEndGameTakerPoints} from "./count-tarot-end-game-taker-points";
-import {PlayingCard} from "tarot-card-deck";
 import {
+    EXCUSE,
     HEART_1,
     HEART_2,
     HEART_3,
@@ -9,10 +9,11 @@ import {
     HEART_J,
     HEART_K,
     HEART_Q,
-    EXCUSE,
+    PlayingCard,
     TRUMP_1,
     TRUMP_21
-} from "tarot-card-deck/dist/cards/all-playing-cards";
+} from "tarot-card-deck";
+
 
 describe('Count tarot end game taker points', function () {
 

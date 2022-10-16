@@ -79,9 +79,9 @@ import {
     TRUMP_7,
     TRUMP_8,
     TRUMP_9
-} from "tarot-card-deck/dist/cards/all-playing-cards";
+} from "tarot-card-deck";
 import {GameResultWithDeck, TarotGame} from "./domain/tarot-game/tarot-game";
-import {getTarotGame} from "./tarot-game-provider";
+import {getTarotGameWithCustomDealFunction} from "./tarot-game-provider";
 import {TarotPlayer} from "./domain/tarot-game/player/tarot-player";
 import {TarotPlayerNotification} from "./domain/tarot-game/player/tarot-player-notification";
 import {CardGamePlayerNotification} from "./domain/card-game/player/card-game-player-notification";
@@ -132,7 +132,7 @@ describe('Simulate a complete game', function () {
         const expectedAttackScore = 204;
         const expectedDefenseScore = -68;
 
-        const tarotGame: TarotGame = getTarotGame(
+        const tarotGame: TarotGame = getTarotGameWithCustomDealFunction(
             DECK_78,
             players,
             (gameResult: GameResultWithDeck) => {

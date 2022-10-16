@@ -1,4 +1,3 @@
-import {PlayingCard} from "tarot-card-deck";
 import {
     CLUB_1,
     CLUB_2,
@@ -9,12 +8,13 @@ import {
     DIAMOND_2,
     DIAMOND_3,
     EXCUSE,
+    PlayingCard,
     TRUMP_1,
     TRUMP_2,
     TRUMP_3,
     TRUMP_4,
     TRUMP_5
-} from "tarot-card-deck/dist/cards/all-playing-cards";
+} from "tarot-card-deck";
 import {getIncorrectCardsSetAside, getPossibleCardsToSetAside} from "./tarot-available-cards-to-set-aside";
 
 describe('Available Cards to set aside', function () {

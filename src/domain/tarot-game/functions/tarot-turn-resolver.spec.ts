@@ -10,7 +10,7 @@ import {
     SPADE_Q,
     TRUMP_1,
     TRUMP_5
-} from "tarot-card-deck/dist/cards/all-playing-cards";
+} from "tarot-card-deck";
 import {resolveTarotTurn} from "./tarot-turn-resolver";
 
 describe(`Tarot turn resolver`, () => {
