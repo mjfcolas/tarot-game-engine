@@ -2,8 +2,7 @@ import {DefaultCardGameManager} from "./default-card-game-manager";
 import {CardGameManager} from "./card-game-manager";
 import {MockedPlayableTable} from "./ports/__mock__/mocked-playable-table";
 import {DummyCardGamePlayer} from "./player/__dummy__/dummy-card-game-player";
-import {DECK_78} from "tarot-card-deck";
-import {SPADE_4, SPADE_C, TRUMP_1, TRUMP_21} from "tarot-card-deck/dist/cards/all-playing-cards";
+import {DECK_78, SPADE_4, SPADE_C, TRUMP_1, TRUMP_21} from "tarot-card-deck";
 import {PlayedCard, TurnResult} from "./functions/resolve-turn";
 
 describe(`Default card game manager`, () => {

@@ -6,9 +6,8 @@ import {of, ReplaySubject} from "rxjs";
 import {MockedCardGameManager} from "../card-game/__mock__/mocked-card-game-manager";
 import {MockedTarotDealer} from "./dealer/__mock__/mocked-tarot-dealer";
 import {MockedTarotTable} from "./table/ports/__mock__/mocked-tarot-table";
-import {DECK_78} from "tarot-card-deck";
+import {DECK_78, SPADE_4, SPADE_C, TRUMP_1, TRUMP_21} from "tarot-card-deck";
 import {Trick} from "../card-game/card-game-manager";
-import {SPADE_4, SPADE_C, TRUMP_1, TRUMP_21} from "tarot-card-deck/dist/cards/all-playing-cards";
 import {PlayedCard} from "../card-game/functions/resolve-turn";
 
 

@@ -1,5 +1,4 @@
-import {Face, PlayingCardType, Suit} from "tarot-card-deck/dist/cards/playing-card";
-import {PlayingCard} from "tarot-card-deck";
+import {Face, PlayingCard, PlayingCardType, Suit} from "tarot-card-deck";
 
 export type ClassicCard = {
     identifier: string;

@@ -1,6 +1,5 @@
 import {PlayedCard, TurnResult} from "../../card-game/functions/resolve-turn";
-import {PlayingCardType, Suit} from "tarot-card-deck/dist/cards/playing-card";
-import {PlayingCard} from "tarot-card-deck";
+import {PlayingCard, PlayingCardType, Suit} from "tarot-card-deck";
 import {PlayerIdentifier} from "../../card-game/player/card-game-player";
 import {ClassicCard, isClassicCard, isTrumpCard, TrumpCard} from "../cards/card-types";
 

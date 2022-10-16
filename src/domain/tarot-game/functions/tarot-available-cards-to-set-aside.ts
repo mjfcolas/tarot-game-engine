@@ -1,6 +1,5 @@
-import {PlayingCard} from "tarot-card-deck";
-import {Face, PlayingCardType} from "tarot-card-deck/dist/cards/playing-card";
 import {isKing, isOudler, isTrumpsButNotOudler} from "../cards/card-types";
+import {Face, PlayingCard, PlayingCardType} from "tarot-card-deck";
 
 export type GetIncorrectCardsSetAside = (allAvailableCards: PlayingCard[], cardsSetAside: PlayingCard[]) => PlayingCard[]
 export type GetPossibleCardsToSetAside = (allAvailableCards: PlayingCard[], numberOfCardsToSetAside: number) => PlayingCard[]

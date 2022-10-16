@@ -22,7 +22,15 @@ export function getTarotGame(
     playingCards: readonly PlayingCard[],
     players: readonly TarotPlayer[],
     endOfGameCallback: (gameResult: GameResultWithDeck) => void,
-    dealFunction: DealFunction = dealTarotCards
+): TarotGame {
+    return getTarotGameWithCustomDealFunction(playingCards, players, endOfGameCallback, dealTarotCards)
+}
+
+export function getTarotGameWithCustomDealFunction(
+    playingCards: readonly PlayingCard[],
+    players: readonly TarotPlayer[],
+    endOfGameCallback: (gameResult: GameResultWithDeck) => void,
+    dealFunction: DealFunction
 ): TarotGame {
     const table: PlayableTarotTable = new PlayableTarotTable(DECK_78)
     const announceManager: AnnounceManager = new DefaultAnnounceManager(players);

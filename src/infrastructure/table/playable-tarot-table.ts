@@ -1,7 +1,7 @@
 import {PlayableTable} from "../../domain/card-game/ports/playable-table";
 import {TarotTable} from "../../domain/tarot-game/table/ports/tarot-table";
 import {PlayingCard} from "tarot-card-deck";
-import {Table} from "play-with-deck/dist/table/table";
+import {Table} from "play-with-deck";
 import {PlayerIdentifier} from "../../domain/card-game/player/card-game-player";
 
 const MAIN_DECK_IDENTIFIER = "MAIN";

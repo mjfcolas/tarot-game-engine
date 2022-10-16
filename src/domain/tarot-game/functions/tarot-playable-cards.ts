@@ -1,6 +1,4 @@
-import {PlayingCard} from "tarot-card-deck";
-import {EXCUSE} from "tarot-card-deck/dist/cards/all-playing-cards";
-import {PlayingCardType} from "tarot-card-deck/dist/cards/playing-card";
+import {EXCUSE, PlayingCard, PlayingCardType} from "tarot-card-deck";
 import {ClassicCard, isClassicCard, isTrumpCard, TrumpCard} from "../cards/card-types";
 
 export function getPlayableTarotCards(alreadyPlayedCards: readonly PlayingCard[], playerCards: readonly PlayingCard[]): readonly PlayingCard[] {

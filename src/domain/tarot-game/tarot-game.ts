@@ -9,7 +9,7 @@ import {GetIncorrectCardsSetAside, GetPossibleCardsToSetAside} from "./functions
 import {CountEndGameTakerPoints} from "./functions/count-tarot-end-game-taker-points";
 import {isExcuse, isOudler, isTrumpCard} from "./cards/card-types";
 import {CountEndGameScore, EndGameScore, Team} from "./functions/count-tarot-end-game-score";
-import {TRUMP_1} from "tarot-card-deck/dist/cards/all-playing-cards";
+import {TRUMP_1} from "tarot-card-deck";
 import {PlayerIdentifier} from "../card-game/player/card-game-player";
 
 export type PlayerWithScore = {
