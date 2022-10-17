@@ -84,4 +84,14 @@ describe('Playable Tarot Table', function () {
         table.moveFromTableToPointsOf([DECK_78[0]], "P2")
         expect(table.listPointsFor("P2")).toEqual([DECK_78[0]]);
     })
+
+    test(`Given a table, 
+    when moving cards from a player's hand to the same player's point,
+    then the player has this card in its points`, () => {
+        const playerIdentifier = "P1";
+        const table: PlayableTarotTable = new PlayableTarotTable(aDeck);
+        table.giveCardTo(DECK_78[0].identifier, playerIdentifier)
+        table.moveFromHandToPointsOf([DECK_78[0]], playerIdentifier)
+        expect(table.listPointsFor(playerIdentifier)).toEqual([DECK_78[0]]);
+    })
 });
