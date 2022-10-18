@@ -36,6 +36,12 @@ export class DefaultCardGameManager implements CardGameManager {
     }
 
     play(playerThatPlay: CardGamePlayer, card: PlayingCard) {
+        if (!this.currentTurnManager) {
+            playerThatPlay.notify({
+                type: "ERROR_WHILE_PLAYING"
+            })
+            return;
+        }
         this.currentTurnManager.play(playerThatPlay, card)
     }
 

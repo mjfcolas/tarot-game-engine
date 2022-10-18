@@ -72,6 +72,13 @@ describe(`Default card game manager`, () => {
         ]
     })
 
+    test(`Given a card game manager and a game that has not begun,
+    when player tries to play,
+    then player is notifier that game has not begun`, () => {
+        const cardGameManager: DefaultCardGameManager = new DefaultCardGameManager(mockedResolveTurn, mockedGetPlayableCards, mockedTarotTable, players);
+        cardGameManager.play(players[0], aPlayingCard)
+        expect(players[0].playError).toHaveBeenCalled()
+    })
 
     test(`Given a card game manager, 
     when game begin, 
