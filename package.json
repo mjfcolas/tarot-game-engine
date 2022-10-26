@@ -28,7 +28,7 @@
   "author": "mjfcolas",
   "license": "GPL-3.0",
   "dependencies": {
-    "play-with-deck": "^1.1.1",
+    "play-with-deck": "^1.2.0",
     "rxjs": "^7.5.2",
     "tarot-card-deck": "^1.2.3"
   },
