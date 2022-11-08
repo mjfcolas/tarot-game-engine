@@ -1,5 +1,4 @@
 import {DealFunction} from "./domain/tarot-game/dealer/default-tarot-dealer";
-import {DECK_78, PlayingCard} from "tarot-card-deck";
 import {
     CLUB_1,
     CLUB_10,
@@ -15,6 +14,7 @@ import {
     CLUB_J,
     CLUB_K,
     CLUB_Q,
+    DECK_78,
     DIAMOND_1,
     DIAMOND_10,
     DIAMOND_2,
@@ -29,6 +29,7 @@ import {
     DIAMOND_J,
     DIAMOND_K,
     DIAMOND_Q,
+    EXCUSE,
     HEART_1,
     HEART_10,
     HEART_2,
@@ -43,7 +44,7 @@ import {
     HEART_J,
     HEART_K,
     HEART_Q,
-    EXCUSE,
+    PlayingCard,
     SPADE_1,
     SPADE_10,
     SPADE_2,
@@ -116,9 +117,29 @@ describe('Simulate a complete game', function () {
         }
     }
 
-    it(`Given known decks of cards for each player,
-        when simulating a complete game,
-        then games can complete`, (done) => {
+
+    const testCases: { parameters: { poigneeAnnouncedByTaker: boolean }, expectedResult: { expectedDefenseScore: number, expectedAttackScore: number } }[] = [
+        {
+            parameters: {
+                poigneeAnnouncedByTaker: false
+            },
+            expectedResult: {
+                expectedDefenseScore: -68,
+                expectedAttackScore: 204
+            }
+        },
+        {
+            parameters: {
+                poigneeAnnouncedByTaker: true
+            },
+            expectedResult: {
+                expectedDefenseScore: -88,
+                expectedAttackScore: 264
+            }
+        }
+    ];
+
+    it.each(testCases)(`Integration test scenarios`, ({parameters, expectedResult}, done: any) => {
 
         const playerIdentifiers = ["0", "1", "2", "3"]
 
@@ -129,8 +150,6 @@ describe('Simulate a complete game', function () {
             new TestPlayer(playerIdentifiers[3])
         ]
 
-        const expectedAttackScore = 204;
-        const expectedDefenseScore = -68;
 
         const tarotGame: TarotGame = getTarotGameWithCustomDealFunction(
             DECK_78,
@@ -139,13 +158,13 @@ describe('Simulate a complete game', function () {
                 console.log(gameResult)
                 expect(gameResult.numberOfPointsForAttack).toEqual(50)
                 expect(gameResult.finalScores[0].player).toEqual(playerIdentifiers[0])
-                expect(gameResult.finalScores[0].score).toEqual(expectedDefenseScore)
+                expect(gameResult.finalScores[0].score).toEqual(expectedResult.expectedDefenseScore)
                 expect(gameResult.finalScores[1].player).toEqual(playerIdentifiers[1])
-                expect(gameResult.finalScores[1].score).toEqual(expectedDefenseScore)
+                expect(gameResult.finalScores[1].score).toEqual(expectedResult.expectedDefenseScore)
                 expect(gameResult.finalScores[2].player).toEqual(playerIdentifiers[2])
-                expect(gameResult.finalScores[2].score).toEqual(expectedAttackScore)
+                expect(gameResult.finalScores[2].score).toEqual(expectedResult.expectedAttackScore)
                 expect(gameResult.finalScores[3].player).toEqual(playerIdentifiers[3])
-                expect(gameResult.finalScores[3].score).toEqual(expectedDefenseScore)
+                expect(gameResult.finalScores[3].score).toEqual(expectedResult.expectedDefenseScore)
                 done()
             },
             predictableDealFunction
@@ -158,8 +177,14 @@ describe('Simulate a complete game', function () {
 
         tarotGame.setAside(players[2], [HEART_3, HEART_7, HEART_J, CLUB_5, CLUB_9, CLUB_Q])
 
+
         tarotGame.play(players[0], HEART_1)
         tarotGame.play(players[1], HEART_2)
+        if (parameters.poigneeAnnouncedByTaker) {
+            tarotGame.announcePoignee(players[2], [TRUMP_3, TRUMP_7, TRUMP_11, TRUMP_15, TRUMP_17, TRUMP_18, TRUMP_19, TRUMP_20, TRUMP_21, EXCUSE])
+        } else {
+            tarotGame.declinePoignee(players[2])
+        }
         tarotGame.play(players[2], TRUMP_3)
         tarotGame.play(players[3], HEART_4)
 
@@ -247,8 +272,7 @@ describe('Simulate a complete game', function () {
         tarotGame.play(players[3], CLUB_10)
         tarotGame.play(players[0], HEART_Q)
         tarotGame.play(players[1], HEART_K)
-
-    });
+    })
 });
 
 class TestPlayer implements TarotPlayer {

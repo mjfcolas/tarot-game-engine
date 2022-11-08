@@ -6,11 +6,7 @@ export type GetPossibleCardsToSetAside = (allAvailableCards: PlayingCard[], numb
 
 export function getIncorrectCardsSetAside(allAvailableCards: readonly PlayingCard[], cardsSetAside: readonly PlayingCard[]): PlayingCard[] {
     const numberOfCardsSetAside = cardsSetAside.length;
-    const numberOfCardsThatAreNotTrumpsNorKingNorOudlers = allAvailableCards.filter(currentCard =>
-        currentCard.type !== PlayingCardType.EXCUSE
-        && currentCard.type !== PlayingCardType.TRUMP
-        && (currentCard.type !== PlayingCardType.FACE
-            || currentCard.type === PlayingCardType.FACE && currentCard.face !== Face.K)).length
+    const numberOfCardsThatAreNotTrumpsNorKingNorOudlers = allAvailableCards.filter(cardIsNotTrumpNorKingNorOudler).length
     const numberOfTrumpsToSetAside = numberOfCardsSetAside - numberOfCardsThatAreNotTrumpsNorKingNorOudlers;
 
     const oudlersAndKingSetAside = cardsSetAside.filter(currentCard => isOudler(currentCard) || isKing(currentCard))
@@ -23,11 +19,7 @@ export function getIncorrectCardsSetAside(allAvailableCards: readonly PlayingCar
 }
 
 export function getPossibleCardsToSetAside(allAvailableCards: readonly PlayingCard[], numberOfCardsToSetAside: number): PlayingCard[] {
-    const cardsThatAreNotTrumpsNorKingNorOudlers: PlayingCard[] = allAvailableCards.filter(currentCard =>
-        currentCard.type !== PlayingCardType.EXCUSE
-        && currentCard.type !== PlayingCardType.TRUMP
-        && (currentCard.type !== PlayingCardType.FACE
-            || currentCard.type === PlayingCardType.FACE && currentCard.face !== Face.K))
+    const cardsThatAreNotTrumpsNorKingNorOudlers: PlayingCard[] = allAvailableCards.filter(cardIsNotTrumpNorKingNorOudler)
 
     const trumpsThatAreNotOudlers: PlayingCard[] = allAvailableCards.filter(currentCard =>
         currentCard.type === PlayingCardType.TRUMP
@@ -40,4 +32,11 @@ export function getPossibleCardsToSetAside(allAvailableCards: readonly PlayingCa
     } else {
         return cardsThatAreNotTrumpsNorKingNorOudlers;
     }
+}
+
+function cardIsNotTrumpNorKingNorOudler(card: PlayingCard) {
+    return card.type !== PlayingCardType.EXCUSE
+        && card.type !== PlayingCardType.TRUMP
+        && (card.type !== PlayingCardType.FACE
+            || card.type === PlayingCardType.FACE && card.face !== Face.K)
 }

@@ -74,7 +74,6 @@ export class DefaultAnnounceManager implements AnnounceManager {
     }
 
     announcesAreComplete(): Observable<TakerAnnounce> {
-        this.currentPlayer = undefined;
         return this.taker
     }
 

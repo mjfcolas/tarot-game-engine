@@ -4,6 +4,7 @@ import {MockedPlayableTable} from "./ports/__mock__/mocked-playable-table";
 import {DummyCardGamePlayer} from "./player/__dummy__/dummy-card-game-player";
 import {DECK_78, SPADE_4, SPADE_C, TRUMP_1, TRUMP_21} from "tarot-card-deck";
 import {PlayedCard, TurnResult} from "./functions/resolve-turn";
+import {MockedPlugIn} from "./__mock__/mocked-plug-in";
 
 describe(`Default card game manager`, () => {
 
@@ -281,6 +282,76 @@ describe(`Default card game manager`, () => {
         playCompleteTurn(cardGameManager)
 
         expect(localMockedTarotTable.moveFromTableToPointsOf).toHaveBeenCalledTimes(4)
+    });
+
+    test(`Given a card game manager and a turn plug-in, 
+        when game begin, 
+        then plug-in is executed and first player is asked to play after execution of add in`, () => {
+        const plugin: MockedPlugIn = new MockedPlugIn();
+        const cardGameManager: DefaultCardGameManager = new DefaultCardGameManager(
+            mockedResolveTurn,
+            mockedGetPlayableCards,
+            mockedTarotTable,
+            players,
+        );
+        cardGameManager.registerPlayerTurnPlugin(plugin)
+        cardGameManager.begin();
+        expect(players[0].askedToPlay).not.toHaveBeenCalled();
+        plugin.complete()
+        expect(players[0].askedToPlay).toHaveBeenCalled();
+    });
+
+    test(`Given a game that has just begun with a turn plug-in, 
+        when first player tries to play before ending of of plug-in execution, 
+        then the player is notified that he cannot play`, () => {
+        const plugin: MockedPlugIn = new MockedPlugIn();
+        const cardGameManager: DefaultCardGameManager = new DefaultCardGameManager(
+            mockedResolveTurn,
+            mockedGetPlayableCards,
+            mockedTarotTable,
+            players,
+        );
+        cardGameManager.registerPlayerTurnPlugin(plugin)
+        cardGameManager.begin();
+        cardGameManager.play(players[0], aPlayingCard);
+        expect(players[0].playError).toHaveBeenCalled()
+    });
+
+    test(`Given a game that has just begun with a turn plug-in, 
+        when first player has played, 
+        then plug-in is executed before second player turn and second player is asked to play after second execution of plug-in`, () => {
+        const plugin: MockedPlugIn = new MockedPlugIn();
+        const cardGameManager: DefaultCardGameManager = new DefaultCardGameManager(
+            mockedResolveTurn,
+            mockedGetPlayableCards,
+            mockedTarotTable,
+            players,
+        );
+        cardGameManager.registerPlayerTurnPlugin(plugin)
+        cardGameManager.begin();
+        plugin.complete()
+        cardGameManager.play(players[0], aPlayingCard);
+        expect(players[1].askedToPlay).not.toHaveBeenCalled()
+        plugin.complete()
+        expect(players[1].askedToPlay).toHaveBeenCalled();
+    });
+
+    test(`Given a game that has just begun with a turn plug-in and a first player that has played, 
+        when second player tries to play before ending of plug-in execution, 
+        then the second player is notified that he cannot play`, () => {
+        const plugin: MockedPlugIn = new MockedPlugIn();
+        const cardGameManager: DefaultCardGameManager = new DefaultCardGameManager(
+            mockedResolveTurn,
+            mockedGetPlayableCards,
+            mockedTarotTable,
+            players
+        );
+        cardGameManager.registerPlayerTurnPlugin(plugin)
+        cardGameManager.begin();
+        plugin.complete()
+        cardGameManager.play(players[0], aPlayingCard);
+        cardGameManager.play(players[1], aPlayingCard);
+        expect(players[1].playError).toHaveBeenCalled()
     });
 });
 

@@ -1,4 +1,4 @@
-export {getTarotGame} from "./tarot-game-provider";
+export {getTarotGame, getTarotGameWithCustomDealFunction} from "./tarot-game-provider";
 export {TarotGame, GameResultWithDeck, PlayerWithScore} from "./domain/tarot-game/tarot-game"
 export {TarotPlayer} from "./domain/tarot-game/player/tarot-player"
 export {Announce} from "./domain/tarot-game/announce/announce"

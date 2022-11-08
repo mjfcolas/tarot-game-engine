@@ -1,5 +1,6 @@
 import {Announce} from "../announce/announce";
-import {countFourPlayersTarotScore, EndGameScore, EndGameStatus, Poignee} from "./count-tarot-end-game-score";
+import {countFourPlayersTarotScore, EndGameScore, EndGameStatus} from "./count-tarot-end-game-score";
+import {Poignee} from "../poignee/poignee";
 
 describe('Count tarot end game scores', function () {
 
@@ -7,7 +8,7 @@ describe('Count tarot end game scores', function () {
         parameters: {
             announce: Announce.GARDE,
             attackNumberOfPoints: 49,
-            poignee: Poignee.SINGLE,
+            poignee: Poignee.SIMPLE,
             petitInLastTrick: "ATTACK",
             attackNumberOfOudlers: 2,
         },
@@ -43,7 +44,7 @@ describe('Count tarot end game scores', function () {
         parameters: {
             announce: Announce.PRISE,
             attackNumberOfPoints: 49,
-            poignee: Poignee.SINGLE,
+            poignee: Poignee.SIMPLE,
             petitInLastTrick: "ATTACK",
             attackNumberOfOudlers: 0,
         },
@@ -55,7 +56,7 @@ describe('Count tarot end game scores', function () {
         parameters: {
             announce: Announce.GARDE,
             attackNumberOfPoints: 52,
-            poignee: Poignee.SINGLE,
+            poignee: Poignee.SIMPLE,
             petitInLastTrick: null,
             attackNumberOfOudlers: 2,
         },

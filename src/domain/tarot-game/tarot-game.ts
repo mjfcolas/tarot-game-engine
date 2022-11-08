@@ -4,13 +4,13 @@ import {AnnounceManager} from "./announce/announce-manager";
 import {CardGameManager, Trick} from "../card-game/card-game-manager";
 import {TarotTable} from "./table/ports/tarot-table";
 import {TarotDealer} from "./dealer/tarot-dealer";
-import {PlayingCard} from "tarot-card-deck";
+import {PlayingCard, TRUMP_1} from "tarot-card-deck";
 import {GetIncorrectCardsSetAside, GetPossibleCardsToSetAside} from "./functions/tarot-available-cards-to-set-aside";
 import {CountEndGameTakerPoints} from "./functions/count-tarot-end-game-taker-points";
 import {isExcuse, isOudler, isTrumpCard} from "./cards/card-types";
 import {CountEndGameScore, EndGameScore, Team} from "./functions/count-tarot-end-game-score";
-import {TRUMP_1} from "tarot-card-deck";
 import {PlayerIdentifier} from "../card-game/player/card-game-player";
+import {PoigneeCardGamePlugin} from "./poignee/poignee-card-game-plugin";
 
 export type PlayerWithScore = {
     player: PlayerIdentifier,
@@ -38,11 +38,13 @@ export class TarotGame {
         private readonly dealer: TarotDealer,
         private readonly announceManager: AnnounceManager,
         private readonly cardGameManager: CardGameManager,
+        private readonly poigneePlugin: PoigneeCardGamePlugin,
         private readonly verifyCardsSetAside: GetIncorrectCardsSetAside,
         private readonly getPossibleCardsToSetAside: GetPossibleCardsToSetAside,
         private readonly countEndGameTakerPoints: CountEndGameTakerPoints,
         private readonly countEndGameScore: CountEndGameScore,
         private readonly endOfGameCallback: (gameResult: GameResultWithDeck) => void) {
+        this.cardGameManager.registerPlayerTurnPlugin(poigneePlugin)
         this.table.shuffle();
         this.table.cut();
         this.dealer.deal(this.numberOfCardsInDog);
@@ -64,6 +66,14 @@ export class TarotGame {
         this.table.moveFromHandToPointsOf(cardsSetAside, playerThatSetAside.id);
         TarotGame.notifyCardsAvailable(this.taker, this.table.listCardsOf(this.taker.id))
         this.beginGame();
+    }
+
+    public declinePoignee(player: TarotPlayer) {
+        this.poigneePlugin.decline(player)
+    }
+
+    public announcePoignee(player: TarotPlayer, shownCards: PlayingCard[]) {
+        this.poigneePlugin.announce(player, shownCards)
     }
 
     public play(playerThatPlay: TarotPlayer, card: PlayingCard) {
@@ -150,7 +160,7 @@ export class TarotGame {
 
         const endGameScores: EndGameScore = this.countEndGameScore({
             announce: this.takerAnnounce,
-            poignee: null,
+            poignee: this.poigneePlugin.getPotentialPoignee(),
             petitInLastTrick: this.resolveTeamThatPlayedPetitInLastTrick(allTricks[allTricks.length - 1]),
             attackNumberOfOudlers: wonCardsByTaker.filter(card => isOudler(card) && isTrumpCard(card)).length + (this.takerHasExcuseAtStartOfGame ? 1 : 0),
             attackNumberOfPoints: endGamePointsForTaker

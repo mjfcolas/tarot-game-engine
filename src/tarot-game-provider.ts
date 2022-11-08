@@ -17,6 +17,7 @@ import {
 } from "./domain/tarot-game/functions/tarot-available-cards-to-set-aside";
 import {countTarotEndGameTakerPoints} from "./domain/tarot-game/functions/count-tarot-end-game-taker-points";
 import {countFourPlayersTarotScore} from "./domain/tarot-game/functions/count-tarot-end-game-score";
+import {PoigneeCardGamePlugin} from "./domain/tarot-game/poignee/poignee-card-game-plugin";
 
 export function getTarotGame(
     playingCards: readonly PlayingCard[],
@@ -36,5 +37,6 @@ export function getTarotGameWithCustomDealFunction(
     const announceManager: AnnounceManager = new DefaultAnnounceManager(players);
     const cardGameManager: CardGameManager = new DefaultCardGameManager(resolveTarotTurn, getPlayableTarotCards, table, players);
     const dealer: TarotDealer = new DefaultTarotDealer(table, players, dealFunction)
-    return new TarotGame(players, table, dealer, announceManager, cardGameManager, getIncorrectCardsSetAside, getPossibleCardsToSetAside, countTarotEndGameTakerPoints, countFourPlayersTarotScore, endOfGameCallback);
+    const poigneeCardGamePlugin = new PoigneeCardGamePlugin(players);
+    return new TarotGame(players, table, dealer, announceManager, cardGameManager, poigneeCardGamePlugin, getIncorrectCardsSetAside, getPossibleCardsToSetAside, countTarotEndGameTakerPoints, countFourPlayersTarotScore, endOfGameCallback);
 }

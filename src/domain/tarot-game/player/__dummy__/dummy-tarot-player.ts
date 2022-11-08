@@ -17,6 +17,9 @@ export class DummyTarotPlayer extends DummyCardGamePlayer implements TarotPlayer
     turnResultIsKnown = jest.fn()
     hasToSetAside = jest.fn();
     setAsideError = jest.fn();
+    askedForPoigneeAnnounce = jest.fn();
+    poigneeAnnounceError = jest.fn();
+    poigneeHasBeenAnnounced = jest.fn();
     public availableCards: PlayingCard[] = []
     public availableAnnounces: Announce[] = []
 
@@ -49,6 +52,15 @@ export class DummyTarotPlayer extends DummyCardGamePlayer implements TarotPlayer
         }
         if(playerNotification.type === "ERROR_WHILE_SETTING_ASIDE"){
             this.setAsideError();
+        }
+        if(playerNotification.type === "ASKED_FOR_POIGNEE_ANNOUNCE"){
+            this.askedForPoigneeAnnounce(playerNotification.possibleCardsToShow, playerNotification.numberOfCardsToShow)
+        }
+        if (playerNotification.type === "ERROR_WHILE_ANNOUNCING_POIGNEE") {
+            this.poigneeAnnounceError()
+        }
+        if(playerNotification.type === "POIGNEE_HAS_BEEN_ANNOUNCED"){
+            this.poigneeHasBeenAnnounced(playerNotification.player, playerNotification.shownCards)
         }
     }
 }
