@@ -1,10 +1,5 @@
 import {Announce} from "../announce/announce";
-
-export enum Poignee {
-    SINGLE = "SINGLE",
-    DOUBLE = "DOUBLE",
-    TRIPLE = "TRIPLE",
-}
+import {Poignee} from "../poignee/poignee";
 
 export type Team = "ATTACK" | "DEFENSE"
 
@@ -50,7 +45,7 @@ const multiplierFromAnnounce = (announce: Announce) => {
 
 const pointsFromPoignee = (poignee?: Poignee) => {
     switch (poignee) {
-        case Poignee.SINGLE:
+        case Poignee.SIMPLE:
             return 20;
         case Poignee.DOUBLE:
             return 30;

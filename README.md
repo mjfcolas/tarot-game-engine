@@ -6,10 +6,10 @@ An event based engine to play [Tarot](https://fr.wikipedia.org/wiki/Tarot_fran%C
 
 - ✓ 4 players mode
 - ✓ Scores
+- ✓ Poignées
 
 ## To do
 - 3 players mode
 - 5 players mode
-- Manage "Misères"
 - Manage "Chelem"
-- Manage "Poignées"
+- Implement a configurable dealer

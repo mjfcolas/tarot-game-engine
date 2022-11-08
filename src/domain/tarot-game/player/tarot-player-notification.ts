@@ -29,4 +29,14 @@ export type TarotPlayerNotification = CardGamePlayerNotification | {
     possibleCardsToSetAside: PlayingCard[]
 } | {
     type: "ERROR_WHILE_SETTING_ASIDE"
+} | {
+    type: "ASKED_FOR_POIGNEE_ANNOUNCE",
+    numberOfCardsToShow: number,
+    possibleCardsToShow: PlayingCard[]
+} | {
+    type: "ERROR_WHILE_ANNOUNCING_POIGNEE"
+} | {
+    type: "POIGNEE_HAS_BEEN_ANNOUNCED",
+    player: PlayerIdentifier,
+    shownCards: PlayingCard[]
 }
