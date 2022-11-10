@@ -1,7 +1,8 @@
 import {PlayingCard} from "tarot-card-deck";
 import {PlayerIdentifier} from "../../../card-game/player/card-game-player";
+import {PlayableTable} from "../../../card-game/ports/playable-table";
 
-export interface TarotTable {
+export interface TarotTable extends PlayableTable{
     shuffle(): void
 
     cut(): void
