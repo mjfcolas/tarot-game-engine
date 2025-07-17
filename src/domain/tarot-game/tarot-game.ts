@@ -20,13 +20,16 @@ import {DefaultAnnounceManager} from "./announce/default-announce-manager";
 import {DefaultCardGameManager} from "../card-game/default-card-game-manager";
 import {resolveTarotTurn} from "./functions/tarot-turn-resolver";
 import {getPlayableTarotCards} from "./functions/tarot-playable-cards";
+import {ChelemAnnounce, ChelemResult, ChelemType} from "./chelem/chelem";
 
 export type TarotGameState = {
     takerAnnounce?: Announce;
     taker?: TarotPlayer;
     hasToSetAside?: boolean;
     takerHasExcuseAtStartOfGame?: boolean,
-    endGameTricks?: Trick[]
+    endGameTricks?: Trick[],
+    chelemAnnounce?: ChelemAnnounce,
+    chelemResult?: ChelemResult
 }
 
 export type PlayerWithScore = {
@@ -76,6 +79,10 @@ export class TarotGame {
 
     public announce(playerThatAnnounce: TarotPlayer, announce?: Announce): void {
         this.announceGamePhase.announce(playerThatAnnounce, announce)
+    }
+
+    public announceChelemAfterContract(player: TarotPlayer, type: ChelemType): void {
+        this.announceGamePhase.announceChelemAfterContract(player, type)
     }
 
     public setAside(playerThatSetAside: TarotPlayer, cardsSetAside: PlayingCard[]) {

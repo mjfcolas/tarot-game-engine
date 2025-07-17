@@ -3,6 +3,7 @@ import {CardGamePlayerNotification} from "../../card-game/player/card-game-playe
 import {PlayerIdentifier} from "../../card-game/player/card-game-player";
 import {PlayingCard} from "tarot-card-deck";
 import {PlayerWithScore} from "../tarot-game";
+import {ChelemType} from "../chelem/chelem";
 
 export type TarotPlayerNotification = CardGamePlayerNotification | {
     type: "ASKED_FOR_ANNOUNCE"
@@ -39,4 +40,17 @@ export type TarotPlayerNotification = CardGamePlayerNotification | {
     type: "POIGNEE_HAS_BEEN_ANNOUNCED",
     player: PlayerIdentifier,
     shownCards: PlayingCard[]
+} | {
+    type: "ASKED_FOR_CHELEM_ANNOUNCE"
+} | {
+    type: "CHELEM_HAS_BEEN_ANNOUNCED",
+    player: PlayerIdentifier,
+    chelemType: ChelemType
+} | {
+    type: "CHELEM_ACHIEVED",
+    player: PlayerIdentifier,
+    byAttack: boolean,
+    announced: boolean
+} | {
+    type: "ERROR_WHILE_ANNOUNCING_CHELEM"
 }

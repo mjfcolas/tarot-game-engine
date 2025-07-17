@@ -10,7 +10,7 @@ export type Trick = {
 }
 
 export interface CardGameManager {
-    begin(): void
+    begin(startingPlayer?: CardGamePlayer): void
 
     gameIsOver(): Observable<Trick[]>
 

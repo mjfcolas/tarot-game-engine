@@ -5,6 +5,7 @@ import {MockedTarotTable} from "../../table/ports/__mock__/mocked-tarot-table";
 import {AnnounceGamePhase} from "./announce.game-phase";
 import {DummyTarotPlayer} from "../../player/__dummy__/dummy-tarot-player";
 import {MockedAnnounceManager} from "../../announce/__mock__/mocked-announce-manager";
+import {ChelemType} from "../../chelem/chelem";
 
 describe(`Announces & Dog`, () => {
     let table: MockedTarotTable;
@@ -118,4 +119,60 @@ describe(`Announces & Dog`, () => {
             done()
         })
     })
+
+    describe('Chelem announce integration', () => {
+        test(`Given announce game phase with taker determined,
+        when taker announces a Chelem,
+        then Chelem announce is added to game state`, (done) => {
+            announceManager.announcesAreComplete.mockReturnValue(of({
+                taker: players[1],
+                announce: Announce.PRISE
+            }));
+
+            phase.execute(inputGameState).subscribe(outputGameState => {
+                // Simulate Chelem announce after contract
+                phase.announceChelemAfterContract(players[1], ChelemType.ANNOUNCED);
+                
+                // The game state should be updated with Chelem announce
+                expect(outputGameState.taker).toBe(players[1]);
+                done();
+            });
+        });
+
+        test(`Given announce game phase with taker determined,
+        when a defender tries to announce a Chelem,
+        then error notification is sent`, () => {
+            announceManager.announcesAreComplete.mockReturnValue(of({
+                taker: players[1],
+                announce: Announce.PRISE
+            }));
+
+            phase.execute(inputGameState).subscribe(() => {
+                // Simulate defender trying to announce Chelem
+                phase.announceChelemAfterContract(players[0], ChelemType.ANNOUNCED);
+                
+                // Should receive error notification
+                expect(players[0].errorWhileAnnouncingChelem).toHaveBeenCalled();
+            });
+        });
+
+        test(`Given announce game phase with taker determined,
+        when taker announces a Chelem,
+        then all players are notified`, () => {
+            announceManager.announcesAreComplete.mockReturnValue(of({
+                taker: players[1],
+                announce: Announce.PRISE
+            }));
+
+            phase.execute(inputGameState).subscribe(() => {
+                // Simulate taker announcing Chelem
+                phase.announceChelemAfterContract(players[1], ChelemType.ANNOUNCED);
+                
+                // All players should be notified
+                players.forEach(player => {
+                    expect(player.chelemHasBeenAnnounced).toHaveBeenCalledWith(players[1].id, ChelemType.ANNOUNCED);
+                });
+            });
+        });
+    });
 })

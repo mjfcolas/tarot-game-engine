@@ -20,6 +20,9 @@ export class DummyTarotPlayer extends DummyCardGamePlayer implements TarotPlayer
     askedForPoigneeAnnounce = jest.fn();
     poigneeAnnounceError = jest.fn();
     poigneeHasBeenAnnounced = jest.fn();
+    errorWhileAnnouncingChelem = jest.fn();
+    chelemHasBeenAnnounced = jest.fn();
+    chelemAchieved = jest.fn();
     public availableCards: PlayingCard[] = []
     public availableAnnounces: Announce[] = []
 
@@ -61,6 +64,15 @@ export class DummyTarotPlayer extends DummyCardGamePlayer implements TarotPlayer
         }
         if(playerNotification.type === "POIGNEE_HAS_BEEN_ANNOUNCED"){
             this.poigneeHasBeenAnnounced(playerNotification.player, playerNotification.shownCards)
+        }
+        if(playerNotification.type === "ERROR_WHILE_ANNOUNCING_CHELEM"){
+            this.errorWhileAnnouncingChelem()
+        }
+        if(playerNotification.type === "CHELEM_HAS_BEEN_ANNOUNCED"){
+            this.chelemHasBeenAnnounced(playerNotification.player, playerNotification.chelemType)
+        }
+        if(playerNotification.type === "CHELEM_ACHIEVED"){
+            this.chelemAchieved(playerNotification.player, playerNotification.byAttack, playerNotification.announced)
         }
     }
 }

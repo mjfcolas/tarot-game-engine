@@ -1,5 +1,7 @@
 import {Announce} from "../announce/announce";
 import {Poignee} from "../poignee/poignee";
+import {ChelemAnnounce, ChelemResult} from "../chelem/chelem";
+import {ChelemScoreCalculator, DefaultChelemScoreCalculator} from "../chelem";
 
 export type Team = "ATTACK" | "DEFENSE"
 
@@ -9,6 +11,8 @@ export type EndGameStatus = {
     poignee?: Poignee,
     petitInLastTrick?: Team,
     attackNumberOfOudlers: number,
+    chelemAnnounce?: ChelemAnnounce,
+    chelemResult?: ChelemResult,
 }
 
 export type EndGameScore = {
@@ -67,6 +71,11 @@ const pointsFromPetitInLastTrick = (teamThatPutPetitInLastTrick?: Team) => {
     }
 }
 
+const pointsFromChelem = (chelemAnnounce?: ChelemAnnounce, chelemResult?: ChelemResult): number => {
+    const chelemCalculator: ChelemScoreCalculator = new DefaultChelemScoreCalculator();
+    return chelemCalculator.calculateChelemScore(chelemAnnounce, chelemResult);
+}
+
 export function countFourPlayersTarotScore(endGameStatus: EndGameStatus): EndGameScore {
     let points = 0;
     const contract = contractFromNumberOfOudlers(endGameStatus.attackNumberOfOudlers)
@@ -83,6 +92,23 @@ export function countFourPlayersTarotScore(endGameStatus: EndGameStatus): EndGam
 
     const poigneePoints = pointsFromPoignee(endGameStatus.poignee)
     points += points > 0 ? poigneePoints : -poigneePoints
+
+    // Les primes de Chelem s'ajoutent au score final selon le camp qui les mérite
+    const chelemPoints = pointsFromChelem(endGameStatus.chelemAnnounce, endGameStatus.chelemResult);
+    
+    // Pour les primes de Chelem, on doit considérer qui mérite la prime
+    if (endGameStatus.chelemResult) {
+        if (endGameStatus.chelemResult.byAttack) {
+            // Chelem réalisé par l'attaque ou pénalité pour l'attaque
+            points += chelemPoints;
+        } else if (endGameStatus.chelemResult.achieved && !endGameStatus.chelemResult.byAttack) {
+            // Chelem défensif : la défense gagne la prime
+            points -= chelemPoints;
+        }
+    } else if (endGameStatus.chelemAnnounce && chelemPoints < 0) {
+        // Chelem annoncé mais pas de résultat (échec) : pénalité pour l'attaque
+        points += chelemPoints;
+    }
 
     return {
         attackScoreByPlayer: points * 3,

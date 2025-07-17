@@ -33,8 +33,9 @@ export class DefaultCardGameManager implements CardGameManager {
         this.playerTurnPlugin.push(plugin)
     }
 
-    begin(): void {
-        this.beginTurn(this.players[0]);
+    begin(startingPlayer?: CardGamePlayer): void {
+        const playerToStart = startingPlayer || this.players[0];
+        this.beginTurn(playerToStart);
     }
 
     gameIsOver(): Observable<Trick[]> {

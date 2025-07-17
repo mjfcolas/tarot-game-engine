@@ -34,7 +34,11 @@ export class MainGamePhase implements GamePhase<TarotGameState> {
             return of(inputState)
         }
         const takerHasExcuseAtStartOfGame = this.table.listCardsOf(inputState.taker.id).some((playingCard: PlayingCard) => isExcuse(playingCard))
-        this.cardGameManager.begin();
+        
+        // Si un Chelem a été annoncé, le preneur a le droit d'entame
+        const startingPlayer = inputState.chelemAnnounce ? inputState.taker : undefined;
+        this.cardGameManager.begin(startingPlayer);
+        
         return this.cardGameManager.gameIsOver().pipe(map((endGameTricks) => ({
             ...inputState,
             endGameTricks,

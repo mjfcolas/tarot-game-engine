@@ -273,6 +273,8 @@ describe('Simulate a complete game', function () {
         tarotGame.play(players[0], HEART_Q)
         tarotGame.play(players[1], HEART_K)
     })
+
+    // Note: Tests d'intégration Chelem complets disponibles dans chelem-integration-full.spec.ts
 });
 
 class TestPlayer implements TarotPlayer {

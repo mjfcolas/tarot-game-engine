@@ -6,6 +6,7 @@ import {DummyTarotPlayer} from "../../player/__dummy__/dummy-tarot-player";
 import {TarotGameState} from "../../tarot-game";
 import {of} from "rxjs";
 import {TRUMP_1} from "tarot-card-deck";
+import {ChelemType} from "../../chelem/chelem";
 
 describe(`Main game`, () => {
     const table: MockedTarotTable = new MockedTarotTable();
@@ -74,5 +75,44 @@ describe(`Main game`, () => {
         const spyOnPlay = jest.spyOn(cardGameManager, "play")
         phase.play(players[0], TRUMP_1)
         expect(spyOnPlay).toHaveBeenCalledWith(players[0], TRUMP_1)
+    })
+
+    test(`Given a main game phase with a taker and no Chelem announced,
+    when executing the phase,
+    then card game manager begins without specifying starting player`, (done) => {
+        table.listCardsOf.mockReturnValue([])
+        cardGameManager.gameIsOver.mockReturnValue(of([]))
+        const spyOnBegin = jest.spyOn(cardGameManager, "begin")
+
+        const inputState: TarotGameState = {
+            taker: players[1],
+            chelemAnnounce: undefined
+        }
+
+        phase.execute(inputState).subscribe(() => {
+            expect(spyOnBegin).toHaveBeenCalledWith(undefined)
+            done()
+        })
+    })
+
+    test(`Given a main game phase with a taker and Chelem announced,
+    when executing the phase,
+    then card game manager begins with taker as starting player`, (done) => {
+        table.listCardsOf.mockReturnValue([])
+        cardGameManager.gameIsOver.mockReturnValue(of([]))
+        const spyOnBegin = jest.spyOn(cardGameManager, "begin")
+
+        const inputState: TarotGameState = {
+            taker: players[1],
+            chelemAnnounce: {
+                player: players[1].id,
+                type: ChelemType.ANNOUNCED
+            }
+        }
+
+        phase.execute(inputState).subscribe(() => {
+            expect(spyOnBegin).toHaveBeenCalledWith(players[1])
+            done()
+        })
     })
 })
